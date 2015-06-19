@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es" >
   <head>
@@ -22,7 +23,11 @@
 
   </head>
 
-  <body ng-app="kunturApp" layout="row" ng-controller="KunturController as ul">
+  <body ng-app="kunturApp" >
+
+  <div class="container">
+    <div ng-view=""></div>
+  </div>
 
   <!--<md-sidenav class="site-sidenav md-sidenav-left md-whiteframe-z2"
                 md-component-id="left"
@@ -911,150 +916,6 @@
 
 
 
-  <div flex layout="column" tabIndex="-1" role="main" class="md-whiteframe-z0">
-
-    <md-toolbar layout="row" class="md-whiteframe-z2" ng-show="!showSearch">
-
-      <div class="md-toolbar-tools">
-
-      <md-button class="menu" hide-gt-sm ng-click="ul.toggleList()" aria-label="Mostrar Universidades">
-       <md-icon md-svg-icon="menu" ></md-icon>
-      </md-button >
-
-       <span flex ></span>
-
-          <md-button class="menu" aria-label="Search" ng-click="showSearch=!showSearch" style="padding-top: 4px">
-            <ng-md-icon icon="search" style="fill:white" size="30" ></ng-md-icon>
-          </md-button>  
-      </div>
-    </md-toolbar>
-
-
-    <md-toolbar class="md-hue-1 md-whiteframe-z2" ng-show="showSearch" style="background-color:white">
-      <div class="md-toolbar-tools">
-          <md-button class="menu" ng-click="showSearch = !showSearch" aria-label="Back" style="padding-top: 4px">
-            <ng-md-icon icon="arrow_back" style="fill:black" size="30" ></ng-md-icon>
-          </md-button>
-          
-            <label>&nbsp;</label>
-          <md-input-container md-theme="input" flex md-no-float style="padding-top: 22px;">
-            <input ng-model="cadenaBuscada" placeholder="Buscar..." show-focus="showSearch" >
-          </md-input-container>
-
-          <md-button class="menu" aria-label="Search" ng-click="showSearch = !showSearch" style="padding-top: 4px">
-            <ng-md-icon icon="search" style="fill:black" size="30"></ng-md-icon>
-          </md-button>
-          
-
-      </div>
-
-
-    </md-toolbar>
-
-
-
-
-
-
-
-    <md-content flex id="content" class="md-back2-theme">
-      <md-button class="md-fab  md-fab-bottom-right" aria-label="Agregar Convenio" style="position:fixed" ng-click="showAdd($event)">
-      <md-icon md-svg-icon="images/add.svg"></md-icon>
-      <md-tooltip md-direction="left" >
-        Agregar Convenio
-      </md-tooltip>
-    </md-button>
-    <!-- Responsive table starts here -->
-    <!-- For correct display on small screens you must add 'data-title' to each 'td' in your table -->
-    <div class="table-responsive-vertical shadow-z-1">
-      <!-- Table starts here -->
-      <table id="table" class="table table-hover table-mc-light-blue" >
-        <thead>
-          <tr>
-            <th>Titulo</th>
-            <th>Tipo</th>
-            <th>Desde</th>
-            <th>Hasta</th>
-            <th>Estado</th>
-            <th>Universidades</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr ng-repeat="university in universities | filter:cadenaBuscada" ng-click="toggleRight()">
-            <td data-title="Titulo">{{university.name}}</td>
-            <td data-title="Tipo">{{university.type}}</td>
-            <td data-title="Desde">{{university.from_date | date:'dd/MM/yyyy'}}</td>
-            <td data-title="Hasta">{{university.to_date | date:'dd/MM/yyyy'}}</td>
-            <td data-title="Estado">{{university.status}}</td>
-            <td data-title="Universidades">{{university.cantidad}}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    </md-content>
-  </div>
-
-
-  <!-- TOGGLE RIGHT-->
-
-  <md-sidenav class="md-sidenav-right md-whiteframe-z2" md-component-id="right" style="min-width:44%; overflow:hidden;">
-
-      <md-toolbar class="md-theme-light">
-        <md-list>
-          <md-list-item class="md-3-line">
-            <img src="/images/logo-unc.png" style="background-color:white" class="avatar">
-              <div class="md-list-item-text">
-                <h1>UNIVERSIDAD NACIONAL DE CÓRDOBA</h1>
-                <h4 style="color:white">(UNC)</h4>
-                <p style="color:white">www.unc.edu.ar</p>
-              </div>
-        </md-list-item>
-        </md-list>
-
-      </md-toolbar>
-      <!--
-        <div>
-        <img src="/images/logo-unc.jpg" style="border-radius:50%; width:70px; height:70px; posi" flex="10"><h1 class="md-toolbar-tools"> UNIVERSIDAD NACIONAL de CÓRDOBA</h1></div>
-          <BR><h3>wwww.unc.edu.ar</h3>
-      -->
-      <div style="overflow:visible">
-      <md-tabs md-dynamic-height="" md-border-bottom="" class="kunturTabs" md-stretch-tabs="always" >
-
-        <md-tab label="Plazas" >
-          <md-content class="md-padding md-back-theme flex-container">
-
-          
-
-
-        
-
-        </md-content>
-
-
-
-
-
-
-        </md-tab>
-
-        <md-tab label="Responsables">
-          <md-content class="md-padding">
-            
-
-
-
-        </md-content>
-        </md-tab>
-
-      </md-tabs>
-
-      </div>
-
-
-       
-      
-
-    </md-sidenav>
 
 
 
@@ -1066,6 +927,7 @@
   <script src="./bower_components/angular/angular.js"></script>
   <script src="./bower_components/angular-animate/angular-animate.js"></script>
   <script src="./bower_components/angular-aria/angular-aria.js"></script>
+  <script src="./bower_components/angular-route/angular-route.js"></script>
   <script src="./bower_components/angular-material/angular-material.js"></script>
   <script src="./bower_components/angular-material-icons/angular-material-icons.min.js"></script>
   <script src="./bower_components/leaf-css-framework/js/libs/imagesloaded/imagesloaded.pkgd.min.js?v=0520"></script>

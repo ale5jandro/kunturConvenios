@@ -9,7 +9,27 @@
  * Main module of the application.
  */
 angular
-    .module('kunturApp', ['ngMaterial', 'users','ngMdIcons','ngMap','720kb.datepicker'])
+    .module('kunturApp', ['ngRoute','ngMaterial', 'users','ngMdIcons','ngMap','720kb.datepicker'])
+
+.config(function ($routeProvider) {
+    $routeProvider
+      .when('/', {
+        templateUrl: 'views/main.html',
+        controller: 'MainCtrl'
+      })
+      .when('/about', {
+        templateUrl: 'views/about.html',
+        controller: 'AboutCtrl'
+      })
+      .when('/moduloConvenios', {
+        templateUrl: 'views/moduloconvenios.html',
+        controller: 'KunturController'
+      })
+      .otherwise({
+        redirectTo: '/'
+      });
+  })
+
       .config(function($mdThemingProvider, $mdIconProvider){
            $mdIconProvider
                 .defaultIconSet("styles/svg/avatars.svg", 128)
@@ -49,8 +69,12 @@ angular
           return $http.get(urlBase + 'countries');
       };
 
-      dataFactory.getAgreements=function(callback){
-          return $http.get(urlKuntur + 'getAgreements')
+      dataFactory.getAgreements=function(callback, cadenaBuscada){
+          return $http.get(urlKuntur + 'getAgreements',{
+            params: {
+              busqueda:cadenaBuscada
+            }
+          })
           .success(function(data){
             callback(data);
           })
@@ -112,6 +136,34 @@ angular
           });
     
       };
+
+      dataFactory.getConveniosXOrg=function(agreId, callback){
+        $http.get(urlKuntur + 'getConveniosXOrganizacion',{
+          params: {
+            agrId:agreId
+          }
+        })
+          .success(function(data){
+            callback(data);
+          })
+          .error(function(){
+            alert("Se rompio todo con el WS de conveniosXOrga");
+          });
+      }
+
+      dataFactory.getResponsableXOrgXConvenio=function(agreId, callback){
+        $http.get(urlKuntur + 'getResponsableXOrgXConvenio',{
+          params: {
+            agrId:agreId
+          }
+        })
+          .success(function(data){
+            callback(data);
+          })
+          .error(function(){
+            alert("Se rompio todo con el WS de getResponsableXOrgXConvenio");
+          });
+      }
 
       dataFactory.getUniversities = function (){
         var universities=[
@@ -265,29 +317,18 @@ angular
   };    
 })
 
+
+
 .controller('datePickerCtrl', function() {
 
   });
 
 
-/**angular
-  .module('kunturApp', [
-    'ngAnimate',
-    'ngRoute'
-  ])
-  .config(function ($routeProvider) {
-    $routeProvider
-      .when('/', {
-        templateUrl: 'views/main.html',
-        controller: 'MainCtrl'
-      })
-      .when('/about', {
-        templateUrl: 'views/about.html',
-        controller: 'AboutCtrl'
-      })
-      .otherwise({
-        redirectTo: '/'
-      });
-  });
-**/
+// angular
+//   .module('kunturApp', [
+//     'ngAnimate',
+//     'ngRoute'
+//   ])
+  
+
 

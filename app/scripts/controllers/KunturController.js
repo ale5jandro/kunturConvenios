@@ -32,6 +32,15 @@
     $scope.convenio.organizacion="";
     $scope.convenio.tipo="";
     $scope.convenio.comentario="";
+    $scope.convenio.id="";
+    $scope.convenioSeleccionado={};
+    $scope.convenioSeleccionado.nombre="";
+    $scope.convenioSeleccionado.cantidad="";
+    $scope.convenioSeleccionado.tipo="";
+    $scope.convenioSeleccionado.responsables=[];
+    $scope.plazas = {};
+    $scope.plazas.datos = [];
+    $scope.plazas.cabeceras = [];
 
     // Load all registered users
 
@@ -134,11 +143,68 @@
       $mdDialog.cancel();
     }
 
+    $scope.buscar = function(){
+      console.log("busque");
+      dataFactory.getAgreements(cargarUniversidades,$scope.cadenaBuscada);
+    }
+
+    $scope.cargarDatosAgreement = function(data){
+      //console.log(data);
+      $scope.plazas = {};
+      $scope.plazas.datos = [];
+      $scope.plazas.cabeceras = [];
+      $scope.convenioSeleccionado.cantidad=data.length;
+      // var i;
+      // for(i in data[0]){
+      var auxArray=[];
+      var auxObject=[];
+      for(var i in data.fields){
+        $scope.plazas.cabeceras.push(data.fields[i].name);
+        // for(var j=0;j<data.rows.length;j++){
+        //   auxObject.i
+        // }
+      }
+
+      for(var i=0;i<data.rows.length;i++){
+        auxObject={};
+        for(var j=0;j<data.fields.length;j++){
+          auxObject[j]=data.rows[i][(data.fields[j].name)];
+        }
+        auxArray.push(auxObject);
+      }
+      console.log($scope.plazas.cabeceras);
+      // }
+
+      // var aux=[];
+      // for(var j=0;j<data.datos;j++){
+      //   //$scope.plazas.datos = data;
+      //   for(i in data[0]){
+      //     aux.push(data(j).get(i));
+      //   }
+      // }
+      // $scope.plazas.datos=aux;
+      $scope.plazas.datos = auxArray;
+    }
+
+    $scope.cargarResponsablesAgreement = function(data){
+
+      $scope.convenioSeleccionado.responsables=data;
+      console.log($scope.convenioSeleccionado.responsables);
+    }
+
     //Inicializacion de aplicacion
-    dataFactory.getAgreements(cargarUniversidades);
+    dataFactory.getAgreements(cargarUniversidades,"");
     dataFactory.getAgreementsTypes(caragarAgreementsTypess);
     dataFactory.getOrganizations(caragarOrganizaciones);
     dataFactory.getStatus(cargarStatus);
+    //dataFactory.getConveniosXOrg();
+
+    $scope.getAgreementData = function(convenio){
+      $scope.convenioSeleccionado.nombre=convenio.name;
+      $scope.convenioSeleccionado.tipo=convenio.type;
+      dataFactory.getConveniosXOrg(convenio.id,$scope.cargarDatosAgreement);
+      dataFactory.getResponsableXOrgXConvenio(convenio.id,$scope.cargarResponsablesAgreement);
+    }
 
                     
     $scope.showAdd = function(ev) {
