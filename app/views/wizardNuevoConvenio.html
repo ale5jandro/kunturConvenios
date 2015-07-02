@@ -1,0 +1,134 @@
+<md-dialog aria-label="Mango (Fruit)" id="ventanaCargadoraDeConvenios">
+<div>
+
+   <mt-wizard btn-progress-color="#D8D8D8"  btn-bg-color="#FAFAFA" active-btn-bg-color="#E9E9E9" chevrons-always-visible="true" on-finish="submit()">
+    <mt-wz-step title="Step 1" step-img="views/step1.svg"   on-exit="onExitStep1()">
+        <form name="formStep1"  novalidate layout="column" layout-sm="column" layout-align="start start">
+        	<div layout-sm="column">
+
+           <div layout="row">
+           <md-input-container >
+             <label>Nombre</label> <input ng-model="convenio.nombre"/>
+           </md-input-container>
+           <md-input-container >
+             <label>Codigo</label> <input ng-model="convenio.codigo"/>
+           </md-input-container>
+           </div>
+           <div layout="row">
+           <md-input-container >
+             <label>Fecha desde</label><input ng-model="convenio.desde" type="text" label="desde"/>
+           </md-input-container>
+           <md-input-container >
+             <label>Fecha hasta</label><input ng-model="convenio.hasta" type="text"/>
+           </md-input-container>
+           </div>
+           <div layout="row">
+           <md-input-container >
+             <md-select placeholder="Tipo" ng-model="convenio.tipo"> <md-option ng-repeat="tipo in agreementsTypes" value="{{tipo.id}}">{{tipo.name}}</md-option></md-select>
+           </md-input-container>
+            <md-input-container>
+          		<md-select placeholder="Estado" ng-model="convenio.estado">
+          		<md-option ng-repeat="sta in estados" value="{{sta.id}}">{{sta.name}}</md-option> </md-select>
+           </md-input-container>
+           </div>
+           </div>
+          </form>
+    </mt-wz-step>
+    <mt-wz-step title="Step 2" step-img="views/step2.svg" >
+    	<div >
+		   	<md-input-container layout="row">
+		      <div><label>Title</label>
+		      <input ng-model="user.title"></div>
+              <div style="padding-top: 15px;"><ng-md-icon icon="search" style="fill:#00BCD4" size="30" ></ng-md-icon></div>
+		    </md-input-container>
+		</div>
+   		<div ng-controller="KunturControllerChicos" layout="row" style="font-size: 1rem;">
+	    	<div>
+		    	<div style="height: 100%;
+  					position:static;">
+			    	<ul class="unstyled minimized fade" > 
+			        <li ng-repeat="continent in continents">
+			          <a href="#" class="waves-effect list-item base-padding"  style="padding-left:16px">
+			            <div class="pull-left truncate">
+			              <ng-md-icon icon="public" style="fill:#00BCD4" size="14" ></ng-md-icon> {{continent.name}}
+			            </div>
+			            <div class="pull-right">
+			              <i class="icon icon-arrow-down6 toggle" data-class="icon-arrow-down6" data-altclass="icon-arrow-up5"></i>
+			            </div>
+			          </a>
+			          <ul >
+			            <li ng-repeat="country in continent.countries" >
+			              <a href="" class="waves-effect list-item base-padding" ng-click="searchByCountry(country.code_iso_alfa3)">
+			                <div class="pull-left truncate" >
+			                  <ng-md-icon icon="flag" style="fill:#00BCD4" size="14" ></ng-md-icon> {{country.common_name}}
+			                </div>
+			              </a>
+			            </li> <!-- cierre de pais -->
+			          </ul>  <!-- cierre de lista de paises -->
+			        </li> <!-- cierre de continente -->
+			      </ul> <!-- cierre de lista de continentes -->
+		    	</div>
+		    </div>
+	    	<div>
+	    		{{universities.name}}
+	    		<table id="table" class="table table-hover table-mc-light-blue fixed_headers" >
+				    <thead>
+				        <tr>
+				            <th data-title="Universidad"  >Universidad</th>
+				            <th data-title="País" >Sigla</th>
+				            <th data-title="País" >País</th>
+				        </tr>
+				    </thead>
+				    <tbody id="universityBody" when-scroll-ends="loadUniversities()">
+					    <tr ng-repeat="university in universities" >
+					        <td data-title="Universidad" ng-click="openUniversityInfo(university)">
+					            {{university.original_name}}
+					        </td>
+					        <td data-title="Universidad" ng-click="openUniversityInfo(university)">
+					            {{university.short_name}}
+					        </td>
+					        <td data-title="País" style="padding-left:0px; padding-right:0px;" >
+						        <img ng-src="images/flags/{{university.country_code | lowercase}}.gif " style="display:inline">
+					        </td>
+					    </tr>
+					</tbody>
+				</table>
+	    	</div>
+	    	<div>
+	    		{{prueba}}
+	    	</div>
+    	</div>
+
+
+    </mt-wz-step>
+    <mt-wz-step title="Step 3" step-img="views/step3.svg" >
+      <form name="formStep1"  novalidate layout="column" layout-sm="column" layout-align="start start">
+           <md-input-container >
+             <label>Field 1</label>
+             <input   name="field1" ng-model="field1"  type="text" required step-fill-percent="35"  step-index="2">
+             <div ng-show="field1.$dirty " ng-messages="field1.$error">
+               <div ng-message="required">Item name is required</div>
+             </div>
+           </md-input-container>
+           <md-input-container >
+             <label>Field 2</label>
+             <input   name="field2" ng-model="field2"  type="text" required step-fill-percent="35"  step-index="2">
+             <div ng-show="field2.$dirty " ng-messages="field2.$error">
+               <div ng-message="required">Item name is required</div>
+             </div>
+           </md-input-container>
+           <md-input-container >
+             <label>Field 3</label>
+             <input   name="field3" ng-model="field3"  type="text" required step-fill-percent="35"  step-index="2">
+             <div ng-show="field3.$dirty " ng-messages="field3.$error">
+               <div ng-message="required">Item name is required</div>
+             </div>
+           </md-input-container>
+          </form>
+    </mt-wz-step>
+   
+
+  </mt-wizard>
+
+</div>
+</md-dialog>

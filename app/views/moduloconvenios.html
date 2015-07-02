@@ -1,7 +1,7 @@
-  <div layout="row" ng-controller="KunturController as ul" id="contenido">
+  <div layout="row" ng-controller="KunturControllerAle as ul" id="contenido">
   <div flex layout="column" tabIndex="-1" role="main" class="md-whiteframe-z0">
 
-    <md-toolbar layout="row" class="md-whiteframe-z2" ng-show="!showSearch">
+    <md-toolbar layout="row" class="md-whiteframe-z2 banner" ng-show="!showSearch">
       
       	<div style="height:60px;width:60px;margin-left:15px;">
       		<img src="images/kuntur.png"></img>
@@ -63,6 +63,7 @@
       <table id="table" class="table table-hover table-mc-light-blue" >
         <thead>
           <tr>
+          	<th>N°</th>
             <th>Titulo</th>
             <th>Tipo</th>
             <th>Desde</th>
@@ -73,12 +74,13 @@
         </thead>
         <tbody>
           <tr ng-repeat="university in universities" ng-click="toggleRight();getAgreementData(university);">
+          	<td data-title="Numero">{{university.code}}</td>
             <td data-title="Titulo">{{university.name}}</td>
-            <td data-title="Tipo">{{university.type}}</td>
+            <td data-title="Tipo">{{university.agreement_type_name}}</td>
             <td data-title="Desde">{{university.from_date | date:'dd/MM/yyyy'}}</td>
             <td data-title="Hasta">{{university.to_date | date:'dd/MM/yyyy'}}</td>
-            <td data-title="Estado">{{university.status}}</td>
-            <td data-title="Universidades">{{university.cantidad}}</td>
+            <td data-title="Estado">{{university.agreement_status_name}}</td>
+            <td data-title="Universidades">{{university.orgs}}</td>
           </tr>
         </tbody>
       </table>
@@ -91,7 +93,7 @@
 
   <md-sidenav class="md-sidenav-right md-whiteframe-z2" md-component-id="right" style="margin-top:64px;min-width:44%; overflow:hidden;">
 
-      <md-toolbar class="md-theme-light">
+      <md-toolbar class="md-theme-light banner">
         <md-list>
           <md-list-item class="md-3-line">
 <!--             <img src="/images/logo-unc.png" style="background-color:white" class="avatar">
@@ -103,6 +105,7 @@
 
 
         </md-list-item>
+        	<b style="margin-left:20px;">N° {{convenioSeleccionado.nro}}</b>
         	<b style="margin-left:20px;">{{convenioSeleccionado.nombre}}</b>
         </md-list>
 
@@ -112,8 +115,8 @@
         <img src="/images/logo-unc.jpg" style="border-radius:50%; width:70px; height:70px; posi" flex="10"><h1 class="md-toolbar-tools"> UNIVERSIDAD NACIONAL de CÓRDOBA</h1></div>
           <BR><h3>wwww.unc.edu.ar</h3>
       -->
-      <div style="overflow:visible">
-      <md-tabs md-dynamic-height="" md-border-bottom="" class="kunturTabs" md-stretch-tabs="always" >
+      <div style="overflow:visible;height:100%;"><!--"-->
+      <md-tabs md-dynamic-height="true" md-border-bottom="" class="kunturTabs" md-stretch-tabs="always" style="min-height:100%;height:100%!important;overflow:visible;" ><!-- -->
 
         <md-tab label="Plazas" >
           <md-content class="md-padding md-back-theme flex-container">
@@ -125,7 +128,7 @@
                     <thead>
                       <tr>
                         <!-- <th ng-repeat="(key, data) in plazas.datos[0]">{{key}}</th> -->
-                        <th ng-repeat="data in plazas.cabeceras track by $index">{{data}}</th>
+                        <th ng-repeat="(key, data) in plazas.datos[0] track by $index">{{key}}</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -152,10 +155,10 @@
                     </thead>
                     <tbody>
                       <tr ng-repeat="responsable in convenioSeleccionado.responsables">
-                        <td data-title="Universidad">{{responsable.universidad}}</td>
-                        <td data-title="In">{{responsable.recepcion}} <md-tooltip md-direction="left" >{{responsable.telrecepcion}} {{responsable.mailrecepcion}}</md-tooltip></td>
-                        <td data-title="Out">{{responsable.envio}} <md-tooltip md-direction="left" >{{responsable.telenvio}} 
-                        {{responsable.mailenvio}}</md-tooltip></td>
+                        <td data-title="Universidad">{{responsable.org_short_name}}</td>
+                        <td data-title="In"><div ng-repeat="receiver in responsable.reception_student"> {{receiver.name}} <md-tooltip md-direction="left" >{{receiver.tel}} {{receiver.email}} </md-tooltip></div></td>
+                        <td data-title="Out"><div ng-repeat="sender in responsable.sending_student"> {{sender.name}} <md-tooltip md-direction="left" >{{sender.tel}} 
+                        {{sender.email}}</md-tooltip></div> </td>
                       </tr>
                     </tbody>
              </table>

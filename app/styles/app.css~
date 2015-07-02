@@ -4,7 +4,7 @@ html, body {
   height:100%;
   margin: 0px;
   padding: 0px;
-  overflow: hidden!important;
+  overflow: hidden;
 }
 
 /* Toolbar area */
@@ -148,7 +148,7 @@ span.name {
 
 .kunturTabs {
   background: #00BCD4;
-  color: #212121;
+  color: #ffffff;
 }    
 
 .kunturTabs span{
@@ -213,63 +213,4 @@ span.name {
   height: 250px;
   margin-top: 10px;
     
-}
-
-.tree-container {
-  bottom: 0; 
-  overflow: auto;
-  padding: 3px 6px;
-}
-
-.button-menu {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-}
-
-.tree-header{
-  display: inline-block;
-  margin: 5px 8px;
-}
-
-.floating-button{
-  position: fixed;
-  bottom: 20px;
-  right: 22px;
-}
-
-/* The starting CSS styles for the enter animation */
-.fade.ng-enter {
-  transition: 0.4s ease all;
-  opacity:0;
-  margin-left: 14px;
-}
-
-/* The finishing CSS styles for the enter animation */
-.fade.ng-enter.ng-enter-active {
-  opacity:1;
-  margin-left: 0px;
-}
-
-/* The starting CSS styles for the enter animation */
-.fade-title.ng-enter {
-  transition: 0.2s ease all;
-  opacity:0.2;
-  margin-left: 3px;
-}
-
-/* The finishing CSS styles for the enter animation */
-.fade-title.ng-enter.ng-enter-active {
-  opacity:1;
-  margin-left: 0px;
-}
-
-.list-item:focus{
-  background-color: #EAEAEA;
-  color: #00BCD4;
-}
-
-.toolbar-button{
-  min-width: 50px;
-  margin: 0px;
 }

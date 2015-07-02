@@ -10,7 +10,8 @@
     "angular-material-icons": "~0.4.0",
     "leaf-css-framework": "*",
     "jquery": "~2.1.4",
-    "angularjs-datepicker": "~0.2.5"
+    "angularjs-datepicker": "~0.2.5",
+    "material-wizard": "~0.0.2"
   },
   "appPath": "app",
   "moduleName": "kunturApp",

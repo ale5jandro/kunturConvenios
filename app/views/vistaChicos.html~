@@ -1,0 +1,425 @@
+<div ng-controller="KunturControllerChicos as ul">
+<md-sidenav class="site-sidenav md-sidenav-left md-whiteframe-z2"
+                md-component-id="left"
+                md-is-locked-open="$mdMedia('gt-sm')">
+
+    <md-toolbar class="md-whiteframe-z0 md-tall md-accent">
+      <!-- <h1>Universidades</h1> -->
+      <!-- <img src="images/kuntur.png"> -->
+    </md-toolbar>
+
+    <div class="tree-container">
+    
+    <div layout="row" layout-align="space-between end" style="margin-top: 6px;margin-bottom: 4px;">
+      <div class="md-subhead tree-header" > 
+        <div class="fade-title" ng-if="viewContinents && !viewCountryFilter">Continentes y países</div>
+        <div class="fade-title" ng-if="!viewContinents && !viewCountryFilter">Países</div>
+        <md-input-container md-theme="input" flex md-no-float ng-show="viewCountryFilter" style="padding-bottom: 0px;">
+          <input ng-model="countryFilter" ng-minlength="2" placeholder="Buscar país..." show-focus="viewCountryFilter" >
+        </md-input-container>
+      </div>
+      <a href="" ng-click="clearCountryFilter()" ng-show="viewCountryFilter" style="padding:2px;">
+        <ng-md-icon icon="close" style="fill:grey" size="16"  ></ng-md-icon>  
+        </a>
+      <md-menu style="padding:0px" md-position-mode="target-right target">
+        <ng-md-icon icon="more_vert" style="fill:grey" size="24" ng-click="$mdOpenMenu()"></ng-md-icon>  
+        <md-menu-content width="3" >
+          <md-menu-item >
+            <md-button ng-click="showContinents()">
+              <ng-md-icon icon="public" style="fill:#212121; padding-right: 6px;" size="14" ></ng-md-icon> 
+              Ver por continentes
+            </md-button>
+          </md-menu-item>
+          <md-menu-item >
+            <md-button ng-click="showCountries()">
+              <ng-md-icon icon="flag" style="fill:#212121; padding-right: 6px;" size="14" ></ng-md-icon> 
+              Ver por países
+            </md-button>
+          </md-menu-item>
+          <md-menu-divider ng-show="!viewContinents"></md-menu-divider>
+
+          <md-menu-item ng-show="!viewContinents">
+            <md-button ng-click="showCountryFilter()">
+              <ng-md-icon icon="search" style="fill:#212121; padding-right: 6px;" size="14"></ng-md-icon> 
+              Buscar
+            </md-button>
+          </md-menu-item>
+        </md-menu-content>
+      </md-menu>
+    </div>
+
+      <!-- Vista por Continentes  -->
+      <ul ng-if="viewContinents" class="unstyled minimized fade"> 
+        <li ng-repeat="continent in continents">
+          <a href="#" class="waves-effect list-item base-padding" ng-click="searchByCountry()">
+            <div class="pull-left truncate">
+              <ng-md-icon icon="public" style="fill:#00BCD4" size="14" ></ng-md-icon> {{continent.name}}
+            </div>
+            <div class="pull-right">
+              <i class="icon icon-arrow-down6 toggle" data-class="icon-arrow-down6" data-altclass="icon-arrow-up5"></i>
+            </div>
+          </a>
+          <ul >
+            <li ng-repeat="country in continent.countries" >
+              <a href="" class="waves-effect list-item base-padding">
+                <div class="pull-left truncate" >
+                  <ng-md-icon icon="flag" style="fill:#00BCD4" size="14" ></ng-md-icon> {{country.common_name}}
+                </div>
+              </a>
+            </li> <!-- cierre de pais -->
+          </ul>  <!-- cierre de lista de paises -->
+        </li> <!-- cierre de continente -->
+      </ul> <!-- cierre de lista de continentes -->
+
+      <!-- Vista por Paises  -->
+      <ul ng-if="!viewContinents" class="fade">
+        <li ng-repeat="country in countriesArray | filter:countryFilter">
+          <a href="" class="waves-effect list-item base-padding" ng-click="searchByCountry()" >
+            <div class="pull-left truncate">
+              <ng-md-icon icon="flag" style="fill:#00BCD4" size="14" ></ng-md-icon> {{country.common_name}}
+            </div>
+          </a>
+        </li>
+      </ul>
+
+    </div>
+  </md-sidenav>
+
+
+
+  <div flex layout="column" tabIndex="-1" role="main" class="md-whiteframe-z0">
+
+    <md-toolbar layout="row" class="md-whiteframe-z2" ng-show="!showSearch" >
+      <div class="md-toolbar-tools" style="padding:0px 50px">
+        <md-button class="menu toolbar-button" hide-gt-sm ng-click="ul.toggleList()" aria-label="Mostrar Universidades">
+          <md-icon md-svg-icon="menu" ></md-icon>
+        </md-button >
+        <div>
+         <img src="images/kuntur_blanco.png" style="width: 54px; margin-right: 2px;">
+        </div>
+
+        <span flex ></span>
+
+        <md-button class="menu toolbar-button" aria-label="Search" ng-click="showSearch=!showSearch" style="padding-top: 5px">
+          <ng-md-icon icon="search" style="fill:white" size="30" ></ng-md-icon>
+        </md-button>  
+        <md-button class="menu toolbar-button" aria-label="Search" ng-click="showSearch = !showSearch" style="padding-top: 0px">
+          <md-icon md-svg-icon="agreement"></md-icon>
+        </md-button>
+      </div>
+
+    </md-toolbar>
+
+
+    <md-toolbar class="md-hue-1 md-whiteframe-z2" ng-show="showSearch" style="background-color:white">
+      <div class="md-toolbar-tools" style="padding:0px 50px">
+        <div>
+         <img src="images/kuntur.png" style="width: 54px; margin-right: 2px;">
+        </div>
+        <md-button class="menu" ng-click="showSearch = !showSearch" aria-label="Back" style="padding-top: 4px">
+          <ng-md-icon icon="arrow_back" style="fill:black" size="30" ></ng-md-icon>
+        </md-button>
+          
+        <label>&nbsp;</label>
+        <md-input-container md-theme="input" flex md-no-float style="padding-top: 22px;">
+          <input ng-model="search.who" placeholder="Buscar..." show-focus="showSearch" >
+        </md-input-container>
+
+        <md-button class="menu toolbar-button" aria-label="Search" ng-click="showSearch = !showSearch" style="padding-top: 4px">
+          <ng-md-icon icon="search" style="fill:black" size="30"></ng-md-icon>
+        </md-button>
+        <md-button class="menu toolbar-button" aria-label="Search" ng-click="showSearch = !showSearch" style="padding-top: 0px">
+          <md-icon md-svg-icon="agreement"></md-icon>
+        </md-button>
+
+
+      </div>
+    </md-toolbar>
+
+    <md-content flex id="content" class="md-back2-theme" when-scroll-ends="loadUniversities()">
+
+     <md-button class="md-fab floating-button " aria-label="Add institution" style="padding-top:5px" ng-click="showAdd($event)">
+       <ng-md-icon icon="add" style="fill:white; margin-left:-4px" size="20"></ng-md-icon>
+       <ng-md-icon icon="account_balance" style="fill:white; margin-left:-8px" size="24"  ></ng-md-icon>
+     </md-button>
+
+    <!-- Tabla de Universidades -->
+    
+    <div class="table-responsive-vertical shadow-z-1" >
+      <table id="table" class="table table-hover table-mc-light-blue" >
+        <thead>
+          <tr>
+            <th>Universidad</th>
+            <th>País</th>
+            <th>Web Page</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="university in universities" ng-click="toggleRight()">
+            <td data-title="Universidad" width="50%">
+              <ng-md-icon icon="account_balance" size="16" style="fill:#00BCD4"></ng-md-icon>
+              {{university.original_name}}
+            </td>
+            <td data-title="País" width="25%">
+
+            <img ng-src="images/flags/{{university.country_code | lowercase}}.gif " style="display:inline">
+              {{countries[university.country_code]}}
+            </td>
+            <td data-title="Web" width="25%">
+              <a ng-href="http://{{university.web_site}}" target="_blank">{{university.web_site}}</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    </md-content>
+  </div>
+
+
+  <!-- TOGGLE RIGHT-->
+
+  <md-sidenav class="md-sidenav-right md-whiteframe-z2" md-component-id="right" style="min-width:44%; overflow:hidden;">
+
+      <md-toolbar class="md-theme-light">
+        <md-list>
+          <md-list-item class="md-3-line">
+            <img src="/images/logo-unc.png" style="background-color:white" class="avatar">
+              <div class="md-list-item-text">
+                <h1>UNIVERSIDAD NACIONAL DE CÓRDOBA</h1>
+                <h4 style="color:white">(UNC)</h4>
+                <p style="color:white">www.unc.edu.ar</p>
+              </div>
+          </md-list-item>
+        </md-list>
+      </md-toolbar>
+
+  <!--TABS - TOGGLE RIGHT-->      
+      <md-tabs md-dynamic-height="" md-border-bottom="" class="kunturTabs" md-stretch-tabs="always" >
+      
+        <md-tab label="Datos Generales" >
+          <md-content class="md-padding md-back-theme flex-container">
+            <!-- 1 card -->
+
+            <div class="card card-contact-general flex-item" >
+              <div class="card-image waves-effect waves-block waves-light">
+                <img class="activator" src="images/logo-unc.jpg">
+              </div>
+            <div class="card-content">
+              <span class="card-title activator grey-text text-darken-4">Información <i class="mdi-navigation-more-vert right"></i></span>
+            </div>
+            <div class="card-reveal">
+              <span class="card-title grey-text text-darken-4">Información<i class="mdi-navigation-close right"></i></span>
+              <div class="">
+                <div class="card-contact-icon">
+                  <ng-md-icon icon="email" style="fill:#00BCD4"></ng-md-icon>
+                </div>
+                <div class="card-contact-date">aaaaaaa@unc.edu.ar</div>
+               </div>  
+
+              <div class="">
+                <div class="card-contact-icon">
+                  <ng-md-icon icon="email" style="fill:#00BCD4"></ng-md-icon>
+                </div>
+                <div class="card-contact-date">aaaaaaa@unc.edu.ar</div>
+              </div>  
+
+              <div class="">
+                <div class="card-contact-icon">
+                  <ng-md-icon icon="call" style="fill:#00BCD4"></ng-md-icon>
+                </div>
+                <div class="card-contact-date">+5493571468743215</div>
+              </div>    
+              <div class="">
+                <div class="card-contact-icon">
+                  <ng-md-icon icon="room" style="fill:#00BCD4"></ng-md-icon>
+                </div>
+                <div class="card-contact-date">Pabellón Argentina</div>  
+              </div>
+            </div>
+            </div>
+           
+
+  <!-- 1 card -->
+
+          
+           <div class="card card-contact-general flex-item">
+              <div class="card-image waves-effect waves-block waves-light">
+              <img class="activator" src="images/logo-unc.jpg">
+            </div>
+            <div class="card-content">
+              <span class="card-title activator grey-text text-darken-4">Información <i class="mdi-navigation-more-vert right"></i></span>
+              
+            </div>
+            <div class="card-reveal">
+
+              <span class="card-title grey-text text-darken-4">Información<i class="mdi-navigation-close right"></i></span>
+              <div class="">
+                  <div class="card-contact-icon">
+                  <ng-md-icon icon="email" style="fill:#00BCD4"></ng-md-icon>
+                  </div>
+                  <div class="card-contact-date">aaaaaaa@unc.edu.ar</div>
+                </div>  
+
+                <div class="">
+                  <div class="card-contact-icon">
+                  <ng-md-icon icon="email" style="fill:#00BCD4"></ng-md-icon>
+                  </div>
+                  <div class="card-contact-date">aaaaaaa@unc.edu.ar</div>
+                </div>  
+
+                <div class="">
+                  <div class="card-contact-icon">
+                  <ng-md-icon icon="call" style="fill:#00BCD4"></ng-md-icon>
+                  </div>
+                  <div class="card-contact-date">+5493571468743215</div>
+                </div>    
+                <div class="">
+                  <div class="card-contact-icon">
+                  <ng-md-icon icon="room" style="fill:#00BCD4"></ng-md-icon>
+                  </div>
+                  <div class="card-contact-date">Pabellón Argentina</div>  
+                </div>
+              
+            </div>
+          </div>
+           
+
+             <!-- 1 card -->
+
+          
+           <div class="card card-contact-general flex-item">
+              <div class="card-image waves-effect waves-block waves-light">
+              <img class="activator" src="images/logo-unc.jpg">
+            </div>
+            <div class="card-content">
+              <span class="card-title activator grey-text text-darken-4">Información <i class="mdi-navigation-more-vert right"></i></span>
+              
+            </div>
+            <div class="card-reveal">
+
+              <span class="card-title grey-text text-darken-4">Información<i class="mdi-navigation-close right"></i></span>
+              <div class="">
+                  <div class="card-contact-icon">
+                  <ng-md-icon icon="email" style="fill:#00BCD4"></ng-md-icon>
+                  </div>
+                  <div class="card-contact-date">aaaaaaa@unc.edu.ar</div>
+                </div>  
+
+                <div class="">
+                  <div class="card-contact-icon">
+                  <ng-md-icon icon="email" style="fill:#00BCD4"></ng-md-icon>
+                  </div>
+                  <div class="card-contact-date">aaaaaaa@unc.edu.ar</div>
+                </div>  
+
+                <div class="">
+                  <div class="card-contact-icon">
+                  <ng-md-icon icon="call" style="fill:#00BCD4"></ng-md-icon>
+                  </div>
+                  <div class="card-contact-date">+5493571468743215</div>
+                </div>    
+                <div class="">
+                  <div class="card-contact-icon">
+                  <ng-md-icon icon="room" style="fill:#00BCD4"></ng-md-icon>
+                  </div>
+                  <div class="card-contact-date">Pabellón Argentina</div>  
+                </div>
+            </div>
+          </div>
+           
+
+             <!-- 1 card -->
+
+           <div class="card card-contact-general flex-item" >
+              <div class="card-image waves-effect waves-block waves-light">
+              <img class="activator" src="images/logo-unc.jpg">
+            </div>
+            <div class="card-content">
+              <span class="card-title activator grey-text text-darken-4">Información <i class="mdi-navigation-more-vert right"></i></span>
+            </div>
+            <div class="card-reveal">
+
+              <span class="card-title grey-text text-darken-4">Información<i class="mdi-navigation-close right"></i></span>
+              <div class="">
+                  <div class="card-contact-icon">
+                  <ng-md-icon icon="email" style="fill:#00BCD4"></ng-md-icon>
+                  </div>
+                  <div class="card-contact-date">aaaaaaa@unc.edu.ar</div>
+                </div>  
+
+                <div class="">
+                  <div class="card-contact-icon">
+                  <ng-md-icon icon="email" style="fill:#00BCD4"></ng-md-icon>
+                  </div>
+                  <div class="card-contact-date">aaaaaaa@unc.edu.ar</div>
+                </div>  
+
+                <div class="">
+                  <div class="card-contact-icon">
+                  <ng-md-icon icon="call" style="fill:#00BCD4"></ng-md-icon>
+                  </div>
+                  <div class="card-contact-date">+5493571468743215</div>
+                </div>    
+                <div class="">
+                  <div class="card-contact-icon">
+                  <ng-md-icon icon="room" style="fill:#00BCD4"></ng-md-icon>
+                  </div>
+                  <div class="card-contact-date">Pabellón Argentina</div>  
+                </div>
+              
+            </div>
+          </div>
+
+        </md-content>
+
+        </md-tab>
+      
+
+        <md-tab label="Unidades Académicas">
+          <md-content class="md-padding">
+
+        </md-content>
+        </md-tab>
+
+        <md-tab label="Convenios">
+          <md-content class="md-padding md-back2-theme">
+            
+          <div class="table-responsive-vertical shadow-z-1">
+      <!-- Table starts here -->
+            <table id="table" class="table table-hover table-mc-light-blue" >
+              <thead>
+                <tr>
+                  <th>Titulo</th>
+                  <th>Tipo</th>
+                  <th>Estado</th>
+                  <th>Universidades</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="agreement in agreements">
+                  <td data-title="Tipo">{{agreement.type}}</td>
+                  <td data-title="Titulo">{{agreement.name}}</td>
+                  <td data-title="Estado">{{agreement.status}}</td>
+                  <td data-title="Universidades">{{agreement.cantidad}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+
+        </md-content>
+        </md-tab>
+
+        <md-tab label="Responsables">
+            <md-content class="md-padding">
+            <h1 style="color:black" class="md-display-2">Tab One</h1>
+            <p style="color:black">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla venenatis ante augue. Phasellus volutpat neque ac dui mattis vulputate. Etiam consequat aliquam cursus. In sodales pretium ultrices. Maecenas lectus est, sollicitudin consectetur felis nec, feugiat ultricies mi.</p>
+        <md-button ng-click="close()" >
+          Cerrar
+        </md-button>
+        </md-content>
+        </md-tab>
+
+      </md-tabs>
+    </md-sidenav>
+</div>

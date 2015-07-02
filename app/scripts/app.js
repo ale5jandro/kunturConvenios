@@ -9,7 +9,7 @@
  * Main module of the application.
  */
 angular
-    .module('kunturApp', ['ngRoute','ngMaterial', 'users','ngMdIcons','ngMap','720kb.datepicker'])
+    .module('kunturApp', ['ngRoute','ngAnimate','ngMaterial', 'users','ngMdIcons','720kb.datepicker','material.wizard'])//'ngMap',
 
 .config(function ($routeProvider) {
     $routeProvider
@@ -23,7 +23,11 @@ angular
       })
       .when('/moduloConvenios', {
         templateUrl: 'views/moduloconvenios.html',
-        controller: 'KunturController'
+        controller: 'KunturControllerAle'
+      })
+      .when('/index', {
+        templateUrl: 'views/vistaChicos.html',
+        controller: 'KunturControllerChicos'
       })
       .otherwise({
         redirectTo: '/'
@@ -54,19 +58,25 @@ angular
 
 
     .factory('dataFactory', ['$http',function($http){
-      var urlBase= 'http://nodejs-nodo1-dev.psi.unc.edu.ar:3005/'; //TODO: replace it for the actual url' 
+      var urlGeoObjectWS= 'http://nodejs-nodo1-dev.psi.unc.edu.ar:3005/'; //TODO: replace it for the actual url' 
       var dataFactory = {};
       var urlKuntur = 'http://172.16.248.194:8080/'
       
+      dataFactory.getContinents=function(){
+        return $http.get(urlGeoObjectWS + 'continents');
+      };
 
-      dataFactory.getContinents=function(searchFilters){
-          searchFilters=searchFilters||{}; //Null parameter case
-          return $http.get(urlBase + 'continents');
+      dataFactory.getCountries=function(){
+        return $http.get(urlGeoObjectWS + 'countries');
+      };
+
+      dataFactory.getCountriesFromContinent=function(continentCode){
+        return $http.get(urlGeoObjectWS + 'continents/' + continentCode + '/countries');
       };
 
       dataFactory.getCountry=function(searchFilters){
           searchFilters=searchFilters||{}; //Null parameter case
-          return $http.get(urlBase + 'countries');
+          return $http.get(urlGeoObjectWS + 'countries');
       };
 
       dataFactory.getAgreements=function(callback, cadenaBuscada){
@@ -138,12 +148,15 @@ angular
       };
 
       dataFactory.getConveniosXOrg=function(agreId, callback){
+        console.log("llmado");
         $http.get(urlKuntur + 'getConveniosXOrganizacion',{
           params: {
             agrId:agreId
           }
         })
           .success(function(data){
+            console.log("datos");
+            console.log(data);
             callback(data);
           })
           .error(function(){
@@ -165,144 +178,32 @@ angular
           });
       }
 
-      dataFactory.getUniversities = function (){
-        var universities=[
-        {
-          name:"Universidad Nacional de Córdoba",
-          shortName:"UNC",
-          country:"Argentina",
-          webPage:"http://www.unc.edu.ar"
-        },
+      dataFactory.getUniversities = function (callback,universitiesFilter, page){
+        var pageSize = 30;
+        if(page)
+          var offset = page * pageSize;
+        else
+          var offset = 0;
 
-        {
-          name:"Universidad Nacional de Córdoba",
-          shortName:"UNC",
-          country:"Argentina",
-          webPage:"http://www.unc.edu.ar"
-        },
+        var url = urlKuntur + 'universities?offset='+ offset +'&limit='+pageSize;
 
-        {
-          name:"Universidad Nacional de Córdoba",
-          shortName:"UNC",
-          country:"Argentina",
-          webPage:"http://www.unc.edu.ar"
-        },
+        if(universitiesFilter){
+          if(universitiesFilter.countryCode)
+            url += '&countryCode=' + universitiesFilter.countryCode;
 
-        {
-          name:"Universidad Nacional de Córdoba",
-          shortName:"UNC",
-          country:"Argentina",
-          webPage:"http://www.unc.edu.ar"
-        },
-
-        {
-          name:"Universidad Nacional de Córdoba",
-          shortName:"UNC",
-          country:"Argentina",
-          webPage:"http://www.unc.edu.ar"
-        },
-
-        {
-          name:"Universidad Nacional de Córdoba",
-          shortName:"UNC",
-          country:"Argentina",
-          webPage:"http://www.unc.edu.ar"
-        },
-
-        {
-          name:"Universidad Nacional de Córdoba",
-          shortName:"UNC",
-          country:"Argentina",
-          webPage:"http://www.unc.edu.ar"
-        },
-
-        {
-          name:"Universidad Nacional de Córdoba",
-          shortName:"UNC",
-          country:"Argentina",
-          webPage:"http://www.unc.edu.ar"
-        },
-
-        {
-          name:"Universidad Nacional de Córdoba",
-          shortName:"UNC",
-          country:"Argentina",
-          webPage:"http://www.unc.edu.ar"
-        },
-
-        {
-          name:"Universidad Nacional de Córdoba",
-          shortName:"UNC",
-          country:"Argentina",
-          webPage:"http://www.unc.edu.ar"
-        },
-
-        {
-          name:"Universidad Nacional de Córdoba",
-          shortName:"UNC",
-          country:"Argentina",
-          webPage:"http://www.unc.edu.ar"
-        },
-
-        {
-          name:"Universidad Nacional de Córdoba",
-          shortName:"UNC",
-          country:"Argentina",
-          webPage:"http://www.unc.edu.ar"
-        },
-
-        {
-          name:"Universidad Nacional de Córdoba",
-          shortName:"UNC",
-          country:"Argentina",
-          webPage:"http://www.unc.edu.ar"
-        },
-
-        {
-          name:"Universidad Nacional de Córdoba",
-          shortName:"UNC",
-          country:"Argentina",
-          webPage:"http://www.unc.edu.ar"
-        },
-
-        {
-          name:"Universidad Nacional de Córdoba",
-          shortName:"UNC",
-          country:"Argentina",
-          webPage:"http://www.unc.edu.ar"
-        },
-
-        {
-          name:"Universidad Nacional de Córdoba",
-          shortName:"UNC",
-          country:"Argentina",
-          webPage:"http://www.unc.edu.ar"
-        },
-
-        {
-          name:"Universidad Nacional de Córdoba",
-          shortName:"UNC",
-          country:"Argentina",
-          webPage:"http://www.unc.edu.ar"
-        },
-
-        {
-          name:"Universidad Nacional de Córdoba",
-          shortName:"UNC",
-          country:"Argentina",
-          webPage:"http://www.unc.edu.ar"
-        },
-
-        {
-          name:"Universidad Nacional de Córdoba",
-          shortName:"UNC",
-          country:"Argentina",
-          webPage:"http://www.unc.edu.ar"
+          if(universitiesFilter.searchText)
+            url += '&searchText=' + universitiesFilter.searchText;
         }
 
-      ];
-        return universities;
+        return $http.get(url)
+          .success(function(data){
+            callback(data);
+          })
+          .error(function(error){
+            alert("Unable to load organizations data.",error.message);
+          });
       };
+      
     return dataFactory;
   }])
 
