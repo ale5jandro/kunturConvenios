@@ -147,3 +147,11 @@ md-content.md-back2-theme {
 	width:100%;
 	height:100%;
 }
+
+md-dialog{
+	opacity: 1!important;
+}
+
+md-select-label{
+	opacity: 1!important;
+}

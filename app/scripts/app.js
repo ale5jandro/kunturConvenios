@@ -126,29 +126,42 @@ angular
 
       };
 
-      dataFactory.setAgreement=function(id, erased, code, name, from_date, to_date, comment, agreement_type_id, org_id){
-          $http({
+      // dataFactory.setAgreement=function(id, erased, code, name, from_date, to_date, comment, agreement_type_id, org_id){
+      //     $http({
+      //       method:"post",
+      //       url: urlKuntur + 'insertarAgreement',
+      //       data:{
+      //         erased:erased,
+      //         code:code,
+      //         name:name,
+      //         from_date:from_date,
+      //         to_date:to_date,
+      //         comment:comment,
+      //         agreement_type_id:agreement_type_id,
+      //         org_id:org_id
+      //       }
+      //     })
+      //     .error(function(){
+      //       alert("no iserto");
+      //     });
+    
+      // };
+
+      dataFactory.setAgreement=function(agreement){
+        console.log(agreement);
+       $http({
             method:"post",
             url: urlKuntur + 'insertarAgreement',
             data:{
-              erased:erased,
-              code:code,
-              name:name,
-              from_date:from_date,
-              to_date:to_date,
-              comment:comment,
-              agreement_type_id:agreement_type_id,
-              org_id:org_id
+              agreement:agreement//angular.toJson(plazaIn)
             }
           })
           .error(function(){
             alert("no iserto");
           });
-    
-      };
+      }
 
       dataFactory.getConveniosXOrg=function(agreId, callback){
-        console.log("llmado");
         $http.get(urlKuntur + 'getConveniosXOrganizacion',{
           params: {
             agrId:agreId
@@ -164,6 +177,39 @@ angular
           });
       }
 
+      dataFactory.getResponsableXOrgs=function(callback, orgs){
+        //console.log("llmado");
+        //console.log(orgs);
+        // var aux="";
+        // for(var i=0;i<orgs.length;i++){
+        //   aux+="orgs="+orgs[i];
+        //   if(i!=orgs.length-1)
+        //     aux+="&";
+        // }
+        $http({
+            method:"post",
+            url: urlKuntur + 'listResponsablesByOrgs',
+            data:{
+              orgs:orgs
+            }
+        })
+        .success(function(data){
+          console.log(data);
+          callback(data);
+        })
+        .error(function(){
+          alert("Se rompio todo con el WS de getResponsableXOrgs");
+        });
+       /* $http.get(urlKuntur + 'listResponsablesByOrgs/'+aux)
+          .success(function(data){
+            callback(data);
+          })
+          .error(function(){
+            alert("Se rompio todo con el WS de getResponsableXOrgs");
+          });*/
+      }
+
+
       dataFactory.getResponsableXOrgXConvenio=function(agreId, callback){
         $http.get(urlKuntur + 'getResponsableXOrgXConvenio',{
           params: {
@@ -175,6 +221,16 @@ angular
           })
           .error(function(){
             alert("Se rompio todo con el WS de getResponsableXOrgXConvenio");
+          });
+      }
+
+      dataFactory.orgs2lvl=function(callback){
+        $http.get(urlKuntur + 'orgs2lvl')
+          .success(function(data){
+            callback(data);
+          })
+          .error(function(){
+            alert("Se rompio todo con el WS de orgs2lvl");
           });
       }
 

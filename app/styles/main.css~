@@ -142,3 +142,12 @@ md-content.md-back2-theme {
 #content{
 	background-color:black;
 }
+
+#ventanaCargadoraDeConvenios{
+	width:100%;
+	height:100%;
+}
+
+md-dialog{
+	opacity: 1!important;
+}

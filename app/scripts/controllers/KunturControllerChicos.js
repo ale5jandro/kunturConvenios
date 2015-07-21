@@ -56,7 +56,45 @@
     $scope.viewCountryFilter = false;
     $scope.countryFilter = "";
     $scope.universitiesFilter = {};
+    $scope.newAgreement={};
+    $scope.newAgreement.universities=[];
+    $scope.newAgreement.UniversitySearch="";
+    $scope.newAgreement.Contacts=[];
+    $scope.newAgreement.selectedContactsIn=[];
+    $scope.newAgreement.selectedContactsOut=[];
+    $scope.newAgreement.orgs2Lvl=[];
+    $scope.newAgreement.selectedOrgs2Lvl=[];
+    $scope.newAgreement.plazasIn=[];
+    $scope.newAgreement.plazasOut=[];
+    $scope.newAgreement.type="";
+    $scope.newAgreement.status="";
+    $scope.newAgreement.from="";
+    $scope.newAgreement.to="";
+    $scope.newAgreement.name="";
+    $scope.newAgreement.code="";
 
+    $scope.onFinish = function(){
+      var agreementItemOu = {};
+      var agreementItem = {};
+      var agreement = {};
+
+      //for(var i=0;i<$scope.newAgreement.selectedOrgs2Lvl.length;i++){
+        // console.log($scope.newAgreement.selectedOrgs2Lvl[i]);
+        // console.log($scope.newAgreement.plazasIn[$scope.newAgreement.universities[i].id]);
+        // console.log($scope.newAgreement.plazasOut[$scope.newAgreement.universities[i].id]);
+        var agreementItemOu = {};
+        console.log("pasa");
+        for(var fac in $scope.newAgreement.plazasIn[0]){
+          console.log("pasa2");
+          agreementItemOu.fac=fac;
+          agreementItemOu.in=$scope.newAgreement.plazasIn[fac];
+          agreementItemOu.out=$scope.newAgreement.plazasOut[fac];
+          // console.log(fac);
+          // console.log($scope.newAgreement.plazasIn[fac]);
+          console.log(agreementItemOu);
+        }
+      //}
+    }
 
     $scope.showContinents = function(){
       $scope.viewContinents = true;
@@ -92,6 +130,125 @@
         // console.log($scope.universities);
       }, page);
     };
+
+    $scope.addContryToAgreement=function(university){
+      if($scope.newAgreement.universities.indexOf(university)==-1)
+        $scope.newAgreement.universities.push(university);
+      //console.log($scope.newAgreement.universities);
+      //console.log(dataFactory.getResponsableXOrgs);
+      dataFactory.getResponsableXOrgs(loadContacts, $scope.newAgreement.universities);
+    }
+
+    var loadContacts=function(data){
+      //console.log(data[0].f_responsablesbyorg.length);
+      $scope.newAgreement.Contacts=JSON.parse(data[0].f_responsablesbyorg);
+    }
+
+
+    $scope.removeContryToAgreement=function(university){
+      $scope.newAgreement.universities.splice($scope.newAgreement.universities.indexOf(university),1); 
+      console.log(university);
+      //for(var i=0;iz)
+      $scope.newAgreement.Contacts=$scope.newAgreement.Contacts.filter( function(item) {
+        return !(university.id == item.org_id);
+      } );
+      
+      $scope.newAgreement.selectedContactsOut=[];
+      $scope.newAgreement.selectedContactsIn=[];
+    }
+
+    $scope.searchUniversity=function(){
+      $scope.universitiesFilter.searchText=$scope.newAgreement.UniversitySearch;
+      dataFactory.getUniversities(getUniversities,$scope.universitiesFilter);
+    }
+
+    $scope.searchUniversityCountry=function(code){
+      $scope.universitiesFilter.countryCode=code;
+      dataFactory.getUniversities(getUniversities,$scope.universitiesFilter);
+    }
+
+    $scope.removeFilters=function(){
+      $scope.universitiesFilter.countryCode=null;
+      $scope.universitiesFilter.searchText="";
+      dataFactory.getUniversities(getUniversities);
+    }
+
+    $scope.selectContactIn=function(contact){
+      //console.log(contact);
+      console.log(contact);
+      if($scope.newAgreement.selectedContactsIn.indexOf(contact)==-1)
+        $scope.newAgreement.selectedContactsIn.push(contact);
+    }
+
+    $scope.removeContactFromAgreementIn=function(contact){
+      $scope.newAgreement.selectedContactsIn.splice($scope.newAgreement.selectedContactsIn.indexOf(contact),1); 
+    }
+
+    $scope.selectContactOut=function(contact){
+      //console.log(contact);
+      if($scope.newAgreement.selectedContactsOut.indexOf(contact)==-1)
+        $scope.newAgreement.selectedContactsOut.push(contact);
+    }
+
+    $scope.removeContactFromAgreementOut=function(contact){
+      $scope.newAgreement.selectedContactsOut.splice($scope.newAgreement.selectedContactsOut.indexOf(contact),1); 
+    }
+
+    $scope.selectOrg2Lvl = function(org){
+      if($scope.newAgreement.selectedOrgs2Lvl.indexOf(org)==-1)
+        $scope.newAgreement.selectedOrgs2Lvl.push(org);
+    }
+
+    $scope.removeOrg2LvlFromAgreement = function(org){
+      $scope.newAgreement.selectedOrgs2Lvl.splice($scope.newAgreement.selectedOrgs2Lvl.indexOf(org),1); 
+    }
+
+    $scope.submitAgreement = function(){
+      //console.log($scope.newAgreement.plazasIn);
+      //dataFactory.setAgreement($scope.newAgreement.plazasIn, $scope.newAgreement.plazasOut);
+      var agreement={};
+      agreement.agreementItem=[];
+      agreement.name=$scope.newAgreement.name;
+      agreement.from=$scope.newAgreement.from;
+      agreement.to=$scope.newAgreement.to;
+      agreement.status=$scope.newAgreement.status;
+      agreement.type=$scope.newAgreement.type;
+      agreement.code=$scope.newAgreement.code;
+      for(i in $scope.newAgreement.plazasIn){
+        var agreementItem={};
+        //agreementItem.contactIn=[];
+        //agreementItem.contactOut=[];
+        agreementItem.agreementItemOu=[];
+        agreementItem.id=i;
+        agreementItem.contacts = $.grep($scope.newAgreement.Contacts, function(e){ return (e.org_id == i && (e.in==true || e.out==true)); });
+        //agreementItem.contactOut = $.grep($scope.newAgreement.Contacts, function(e){ return (e.org_id == i && e.out==true); });
+        for(j in $scope.newAgreement.plazasIn[i]){
+          var agreementItemOu={};
+          agreementItemOu.id=j;
+          agreementItemOu.in=$scope.newAgreement.plazasIn[i][j];
+          agreementItemOu.out=$scope.newAgreement.plazasOut[i][j];
+          //console.log($scope.newAgreement.plazasOut[i][j]);
+          agreementItem.agreementItemOu.push(agreementItemOu);
+        }
+        agreement.agreementItem.push(agreementItem)
+      }
+
+
+
+    // for(i in $scope.newAgreement.Contacts){
+    //   if($scope.newAgreement.Contacts[i].in){
+    //     contactIn.push($scope.newAgreement.Contacts[i].id)
+    //   }
+    //   if($scope.newAgreement.Contacts[i].out){
+    //     contactOut.push($scope.newAgreement.Contacts[i].id)
+    //   }
+    // }
+    dataFactory.setAgreement(agreement);
+    //   $scope.newAgreement.plazasIn=[];
+    // $scope.newAgreement.plazasOut=[];
+    }
+
+
 
     $scope.showAdd = function(ev) {
     $mdDialog.show({
@@ -201,10 +358,17 @@
     var getUniversities = function(organizations){
       $scope.universities=organizations;
     }
+
+    var getOrgs2Lvl=function(data){
+      $scope.newAgreement.orgs2Lvl=data;
+    }
     
     dataFactory.getAgreements(getAgreements);
     dataFactory.getAgreementsTypes(getAgreementsTypes);
     dataFactory.getUniversities(getUniversities);
+    dataFactory.orgs2lvl(getOrgs2Lvl)
+
+
 
 
     // Enables expand functionality in subtrees.

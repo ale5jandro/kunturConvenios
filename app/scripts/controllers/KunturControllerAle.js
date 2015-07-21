@@ -190,51 +190,53 @@
     }
 
     $scope.cargarResponsablesAgreement = function(data){
-
       $scope.convenioSeleccionado.responsables=[];
-      var envio=[];
-      var recepcion=[];
-      var row = {};
-      var i=0;
-      for(;i<data.length;i++){
-        //for (j in data[i]){
-          //console.log(data[i][j]);
-          //console.log(data[i].person_family_name);
-          if((i>0)&&(data[i-1].org_short_name!=data[i].org_short_name)){
-            row = {};
-            row.org_short_name=data[i-1].org_short_name;
-            row.reception_student=recepcion;
-            row.sending_student=envio;
-            envio=[];
-            recepcion=[];
-            $scope.convenioSeleccionado.responsables.push(row);
-          }
-          if(data[i].reception_student){
-            row = {};
-            row.name=data[i].name;
-            row.email=data[i].email;
-            row.tel=data[i].tel;
-            recepcion.push(row);
-          }
+      if(data.length>0){
+        
+        var envio=[];
+        var recepcion=[];
+        var row = {};
+        var i=0;
+        for(;i<data.length;i++){
+          //for (j in data[i]){
+            //console.log(data[i][j]);
+            //console.log(data[i].person_family_name);
+            if((i>0)&&(data[i-1].org_short_name!=data[i].org_short_name)){
+              row = {};
+              row.org_short_name=data[i-1].org_short_name;
+              row.reception_student=recepcion;
+              row.sending_student=envio;
+              envio=[];
+              recepcion=[];
+              $scope.convenioSeleccionado.responsables.push(row);
+            }
+            if(data[i].reception_student){
+              row = {};
+              row.name=data[i].name;
+              row.email=data[i].email;
+              row.tel=data[i].tel;
+              recepcion.push(row);
+            }
 
-          if(data[i].sending_student){
-            row = {};
-            row.name=data[i].name;
-            row.email=data[i].email;
-            row.tel=data[i].tel;
-            envio.push(row);
-          }
+            if(data[i].sending_student){
+              row = {};
+              row.name=data[i].name;
+              row.email=data[i].email;
+              row.tel=data[i].tel;
+              envio.push(row);
+            }
 
-       // }
+         // }
+        }
+        row = {};
+        row.org_short_name=data[i-1].org_short_name;
+        row.reception_student=recepcion;
+        row.sending_student=envio;
+        $scope.convenioSeleccionado.responsables.push(row);
+        // console.log()
+        //$scope.convenioSeleccionado.responsables=data;
+        console.log($scope.convenioSeleccionado.responsables);
       }
-      row = {};
-      row.org_short_name=data[i-1].org_short_name;
-      row.reception_student=recepcion;
-      row.sending_student=envio;
-      $scope.convenioSeleccionado.responsables.push(row);
-      // console.log()
-      //$scope.convenioSeleccionado.responsables=data;
-      console.log($scope.convenioSeleccionado.responsables);
     }
 
     //Inicializacion de aplicacion
@@ -243,6 +245,7 @@
     dataFactory.getOrganizations(caragarOrganizaciones);
     dataFactory.getStatus(cargarStatus);
     //dataFactory.getConveniosXOrg();
+
 
     $scope.getAgreementData = function(convenio){
       // console.log("llama2");
