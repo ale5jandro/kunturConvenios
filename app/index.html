@@ -24,14 +24,18 @@
     <link rel="stylesheet" href="https://rawgit.com/angular/bower-material/master/angular-material.css" />
     <link rel="stylesheet" href="https://rawgit.com/Matesign/material-wizard/master/src/material-wizard.css" />
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/0.10.0/angular-material.min.css">
+    <link rel='stylesheet' href='/bower_components/md-date-time/dist/md-date-time.css'>
     <!--<link rel="stylesheet" href="./bower_components/material-wizard/src/material-wizard.css"/>
     <link rel="stylesheet" href="./bower_components/material-wizard/dist/material-wizard.min.css"/>-->
+    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/smoothness/jquery-ui.css" rel="stylesheet" type="text/css"/>
+    <link href="bower_components/angular-xeditable/dist/css/xeditable.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   </head>
 
   <body ng-app="kunturApp" class="fondoNegro">
 
-  <div class="container">
-    <div ng-view=""></div>
+  <div class="container" style="height: 100%;">
+    <div ng-view="" style="height: 100%;"></div>
   </div>
 
   <!--<md-sidenav class="site-sidenav md-sidenav-left md-whiteframe-z2"
@@ -923,10 +927,13 @@
 
 
 
+<!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script> -->
+<!-- RARO -->
+<!--  />
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.5/angular.min.js"></script>
 
-
-
-
+ -->
+<!-- FIN RARO -->
 
   <script src="./bower_components/jquery/dist/jquery.min.js"></script>
   <script src="./bower_components/angular/angular.js"></script>
@@ -954,6 +961,12 @@
   <script src="./scripts/controllers/KunturControllerChicos.js"></script>
   <script src="./scripts/controllers/Toggle.js"></script>
   <script src="./scripts/controllers/UserService.js"></script>
+  <script src='/bower_components/md-date-time/dist/md-date-time.js'></script>
+
+  <script src="bower_components/angular-xeditable/dist/js/xeditable.js"></script>
+  
+  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+ <!--  // <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.11.0/ui-bootstrap-tpls.min.js"></script> -->
   </body>
 </html>
 

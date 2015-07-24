@@ -2,7 +2,7 @@
 
   angular
        .module('kunturApp')
-       .controller('KunturControllerAle', [
+       .controller('KunturController', [
           '$scope','$mdDialog', 'dataFactory','userService', '$mdSidenav', '$mdBottomSheet', '$log', '$q', '$mdUtil',
           KunturController
        ]);
@@ -37,7 +37,6 @@
     $scope.convenioSeleccionado.nombre="";
     $scope.convenioSeleccionado.cantidad="";
     $scope.convenioSeleccionado.tipo="";
-    $scope.convenioSeleccionado.nro="";
     $scope.convenioSeleccionado.responsables=[];
     $scope.plazas = {};
     $scope.plazas.datos = [];
@@ -145,37 +144,35 @@
     }
 
     $scope.buscar = function(){
-      // console.log("busque");
+      console.log("busque");
       dataFactory.getAgreements(cargarUniversidades,$scope.cadenaBuscada);
     }
 
     $scope.cargarDatosAgreement = function(data){
-      console.log("data");
-
-      console.log(data);
+      //console.log(data);
       $scope.plazas = {};
       $scope.plazas.datos = [];
-      // $scope.plazas.cabeceras = [];
-      // $scope.convenioSeleccionado.cantidad=data.length;
+      $scope.plazas.cabeceras = [];
+      $scope.convenioSeleccionado.cantidad=data.length;
       // var i;
       // for(i in data[0]){
-      // var auxArray=[];
-      // var auxObject=[];
-      // for(var i in data.fields){
-      //   $scope.plazas.cabeceras.push(data.fields[i].name);
+      var auxArray=[];
+      var auxObject=[];
+      for(var i in data.fields){
+        $scope.plazas.cabeceras.push(data.fields[i].name);
         // for(var j=0;j<data.rows.length;j++){
         //   auxObject.i
         // }
-      // }
+      }
 
-      // for(var i=0;i<data.rows.length;i++){
-      //   auxObject={};
-      //   for(var j=0;j<data.fields.length;j++){
-      //     auxObject[j]=data.rows[i][(data.fields[j].name)];
-      //   }
-      //   auxArray.push(auxObject);
-      // }
-      // console.log($scope.plazas.cabeceras);
+      for(var i=0;i<data.rows.length;i++){
+        auxObject={};
+        for(var j=0;j<data.fields.length;j++){
+          auxObject[j]=data.rows[i][(data.fields[j].name)];
+        }
+        auxArray.push(auxObject);
+      }
+      console.log($scope.plazas.cabeceras);
       // }
 
       // var aux=[];
@@ -186,57 +183,13 @@
       //   }
       // }
       // $scope.plazas.datos=aux;
-      $scope.plazas.datos = data;
+      $scope.plazas.datos = auxArray;
     }
 
     $scope.cargarResponsablesAgreement = function(data){
-      $scope.convenioSeleccionado.responsables=[];
-      if(data.length>0){
-        
-        var envio=[];
-        var recepcion=[];
-        var row = {};
-        var i=0;
-        for(;i<data.length;i++){
-          //for (j in data[i]){
-            //console.log(data[i][j]);
-            //console.log(data[i].person_family_name);
-            if((i>0)&&(data[i-1].org_short_name!=data[i].org_short_name)){
-              row = {};
-              row.org_short_name=data[i-1].org_short_name;
-              row.reception_student=recepcion;
-              row.sending_student=envio;
-              envio=[];
-              recepcion=[];
-              $scope.convenioSeleccionado.responsables.push(row);
-            }
-            if(data[i].reception_student){
-              row = {};
-              row.name=data[i].name;
-              row.email=data[i].email;
-              row.tel=data[i].tel;
-              recepcion.push(row);
-            }
 
-            if(data[i].sending_student){
-              row = {};
-              row.name=data[i].name;
-              row.email=data[i].email;
-              row.tel=data[i].tel;
-              envio.push(row);
-            }
-
-         // }
-        }
-        row = {};
-        row.org_short_name=data[i-1].org_short_name;
-        row.reception_student=recepcion;
-        row.sending_student=envio;
-        $scope.convenioSeleccionado.responsables.push(row);
-        // console.log()
-        //$scope.convenioSeleccionado.responsables=data;
-        console.log($scope.convenioSeleccionado.responsables);
-      }
+      $scope.convenioSeleccionado.responsables=data;
+      console.log($scope.convenioSeleccionado.responsables);
     }
 
     //Inicializacion de aplicacion
@@ -246,101 +199,71 @@
     dataFactory.getStatus(cargarStatus);
     //dataFactory.getConveniosXOrg();
 
-    $scope.loadStatus = function(){
-      var promesa=dataFactory.loadStatusPromise();
-      promesa.success(function(data) {
-        $scope.statusAvaibles = data;
-      });
-    }
-
-    $scope.loadTypes = function(){
-      var promesa=dataFactory.loadTypesPromise();
-      promesa.success(function(data) {
-        $scope.typesAvaibles = data;
-      });
-    }
-
     $scope.getAgreementData = function(convenio){
-      // console.log("llama2");
-      // console.log(convenio);
       $scope.convenioSeleccionado.nombre=convenio.name;
-      $scope.convenioSeleccionado.nro=convenio.nro;
       $scope.convenioSeleccionado.tipo=convenio.type;
       dataFactory.getConveniosXOrg(convenio.id,$scope.cargarDatosAgreement);
       dataFactory.getResponsableXOrgXConvenio(convenio.id,$scope.cargarResponsablesAgreement);
     }
 
                     
-  //   $scope.showAdd = function(ev) {
-  //   $mdDialog.show({
-  //     controller: KunturController,
-  //     template: '<md-dialog aria-label="Mango (Fruit)"> ' +
-  //                  '<md-content class="md-padding"> ' +
-  //                     '<form name="nuevoConvenioForm">' +
-  //                      '<div layout layout-sm="column">' +
-
-  //                   ' <md-input-container flex> ' +
-  //                   '    <md-select placeholder="Estado" ng-model="convenio.estado"> <md-option ng-repeat="sta in estados" value="{{sta.id}}">{{sta.name}}</md-option> ' +
-  //                   ' </md-input-container> ' +
-  //                    '  ' +
-  //                    ' <md-input-container flex> ' +
-  //                    '   <label>Nombre</label> <input ng-model="convenio.nombre"> ' +
-  //                     '</md-input-container> ' +
-
-  //                    ' <md-input-container flex> ' +
-  //                    '   <label>Codigo</label> <input ng-model="convenio.codigo"> ' +
-  //                    ' </md-input-container> </div>' +
-
-  //                    ' <div layout layout-sm="column"> ' +
-     
-  //                    ' <md-input-container flex> ' +
-  //                    '   <label>Fecha desde</label><input ng-model="convenio.desde" type="text" label="desde"></input>' +
-  //                    ' </md-input-container> ' +
-
-  //                   ' <md-input-container flex> ' +
-  //                   '  <label>Fecha hasta</label><input ng-model="convenio.hasta" type="text"/>' +
-  //                    ' </md-input-container>  ' +
-
-  //                   ' <md-input-container flex> ' +
-  //                   '    <md-select placeholder="Organizacion" ng-model="convenio.organizacion"> <md-option ng-repeat="org in organizaciones" value="{{org.id}}">{{org.name}}</md-option> ' +
-  //                   ' </md-input-container> ' +
-
-  //                   ' <md-input-container flex> ' +
-  //                   '    <md-select placeholder="Tipo" ng-model="convenio.tipo"> <md-option ng-repeat="tipo in agreementsTypes" value="{{tipo.id}}">{{tipo.name}}</md-option> ' +
-  //                   ' </md-input-container></div> ' +
-
-
-
-  //                    ' <md-input-container flex> ' +
-  //                   '    <label>Comentarios</label> <textarea ng-model="convenio.comentario" columns="1" md-maxlength="150"></textarea> ' +
-  //                   '  </md-input-container> </form> ' +
-  //                 '  </md-content> ' +
-  //                ' <div class="md-actions" layout="row"> <span flex></span> ' +
-  //                ' <md-button ng-click="cancelarCargaAgreement()"> Cancel </md-button> ' +
-  //               '  <md-button ng-click="guardarAgreement($event)" class="md-primary"> Save </md-button> ' +
-  //                ' </div>' +
-  //                ' </md-dialog>',
-  //     targetEvent: ev,
-  //   })
-  //   .then(function(answer) {
-  //     $scope.alert = 'You said the information was "' + answer + '".';
-  //   }, function() {
-  //     $scope.alert = 'You cancelled the dialog.';
-  //   });
-  // };
-
-  $scope.showAdd = function(ev){
+    $scope.showAdd = function(ev) {
     $mdDialog.show({
       controller: KunturController,
-      templateUrl: 'views/wizardNuevoConvenio.html',
-      parent: angular.element(document.body),
-      targetEvent: ev
+      template: '<md-dialog aria-label="Mango (Fruit)"> ' +
+                   '<md-content class="md-padding"> ' +
+                      '<form name="nuevoConvenioForm">' +
+                       '<div layout layout-sm="column">' +
+
+                    ' <md-input-container flex> ' +
+                    '    <md-select placeholder="Estado" ng-model="convenio.estado"> <md-option ng-repeat="sta in estados" value="{{sta.id}}">{{sta.name}}</md-option> ' +
+                    ' </md-input-container> ' +
+                     '  ' +
+                     ' <md-input-container flex> ' +
+                     '   <label>Nombre</label> <input ng-model="convenio.nombre"> ' +
+                      '</md-input-container> ' +
+
+                     ' <md-input-container flex> ' +
+                     '   <label>Codigo</label> <input ng-model="convenio.codigo"> ' +
+                     ' </md-input-container> </div>' +
+
+                     ' <div layout layout-sm="column"> ' +
+     
+                     ' <md-input-container flex> ' +
+                     '   <label>Fecha desde</label><input ng-model="convenio.desde" type="text" label="desde"></input>' +
+                     ' </md-input-container> ' +
+
+                    ' <md-input-container flex> ' +
+                    '  <label>Fecha hasta</label><input ng-model="convenio.hasta" type="text"/>' +
+                     ' </md-input-container>  ' +
+
+                    ' <md-input-container flex> ' +
+                    '    <md-select placeholder="Organizacion" ng-model="convenio.organizacion"> <md-option ng-repeat="org in organizaciones" value="{{org.id}}">{{org.name}}</md-option> ' +
+                    ' </md-input-container> ' +
+
+                    ' <md-input-container flex> ' +
+                    '    <md-select placeholder="Tipo" ng-model="convenio.tipo"> <md-option ng-repeat="tipo in agreementsTypes" value="{{tipo.id}}">{{tipo.name}}</md-option> ' +
+                    ' </md-input-container></div> ' +
+
+
+
+                     ' <md-input-container flex> ' +
+                    '    <label>Comentarios</label> <textarea ng-model="convenio.comentario" columns="1" md-maxlength="150"></textarea> ' +
+                    '  </md-input-container> </form> ' +
+                  '  </md-content> ' +
+                 ' <div class="md-actions" layout="row"> <span flex></span> ' +
+                 ' <md-button ng-click="cancelarCargaAgreement()"> Cancel </md-button> ' +
+                '  <md-button ng-click="guardarAgreement($event)" class="md-primary"> Save </md-button> ' +
+                 ' </div>' +
+                 ' </md-dialog>',
+      targetEvent: ev,
     })
-    .then(function(id){
-      // alert(id);
-      dataFactory.findAgreementById(cargarUniversidades,id);
+    .then(function(answer) {
+      $scope.alert = 'You said the information was "' + answer + '".';
+    }, function() {
+      $scope.alert = 'You cancelled the dialog.';
     });
-  }
+  };
 
 
 

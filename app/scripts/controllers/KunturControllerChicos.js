@@ -5,7 +5,9 @@
        .controller('KunturControllerChicos', [
           '$scope','$mdDialog', 'dataFactory', '$mdSidenav', '$mdBottomSheet', '$log', '$q', '$mdUtil',
           KunturController
-       ]);
+       ])
+
+
 
   /**
    * Main Controller for the Angular Material Starter App
@@ -16,7 +18,6 @@
    */
   function KunturController( $scope, $mdDialog, dataFactory,$mdSidenav, $mdBottomSheet, $log, $q, $mdUtil) {
     var self = this;
-    $scope.prueba="lalalala";
 
     function toggleUsersList() {
       var pending = $mdBottomSheet.hide() || $q.when(true);
@@ -243,12 +244,22 @@
     //     contactOut.push($scope.newAgreement.Contacts[i].id)
     //   }
     // }
-    dataFactory.setAgreement(agreement);
+  
+    dataFactory.setAgreement(agreement,succesAgreement);
+
     //   $scope.newAgreement.plazasIn=[];
     // $scope.newAgreement.plazasOut=[];
+    
     }
 
+    var succesAgreement=function(id){
+      // alert(id);
+      $mdDialog.hide([id]);
+    }
 
+    $scope.cancelAgreement=function(){
+      $mdDialog.cancel();
+    }
 
     $scope.showAdd = function(ev) {
     $mdDialog.show({
@@ -366,8 +377,7 @@
     dataFactory.getAgreements(getAgreements);
     dataFactory.getAgreementsTypes(getAgreementsTypes);
     dataFactory.getUniversities(getUniversities);
-    dataFactory.orgs2lvl(getOrgs2Lvl)
-
+    dataFactory.orgs2lvl(getOrgs2Lvl);
 
 
 

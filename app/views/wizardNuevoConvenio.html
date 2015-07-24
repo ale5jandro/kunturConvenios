@@ -1,39 +1,59 @@
 <md-dialog aria-label="Mango (Fruit)" id="ventanaCargadoraDeConvenios" style="overflow:auto;">
 <div style="display:flex; height:90%" ng-controller="KunturControllerChicos">
-
-   <mt-wizard on-finish="onFinish()" btn-progress-color="#D8D8D8" style="height:100%;display:flex;width:100%;" btn-bg-color="#FAFAFA" active-btn-bg-color="#E9E9E9" chevrons-always-visible="true" on-finish="submit()">
+<div style="position: absolute;left: 98%;top:4px;cursor:pointer;size:10px;" ng-click="cancelAgreement();"><i style="font-size:15px" class="material-icons">clear</i></div>
+   <mt-wizard btn-progress-color="#D8D8D8" style="height:100%;display:flex;width:100%;" btn-bg-color="#FAFAFA" active-btn-bg-color="#E9E9E9" chevrons-always-visible="true" 
+   on-finish="submitAgreement()">
     <mt-wz-step title="Step 1" step-img="views/step1.svg"   on-exit="onExitStep1()" >
         <form name="formStep1"  novalidate layout="column" layout-sm="column" layout-align="start start">
-        	<div layout-sm="column">
+        	<div layout-sm="column" style="height:100%;width:100%">
 
            <div layout="row">
-           <md-input-container >
-             <label>Nombre</label> <input ng-model="newAgreement.name"/>
-           </md-input-container>
-           <md-input-container >
-             <label>Codigo</label> <input ng-model="newAgreement.code"/>
-           </md-input-container>
+           	<table>
+          		<tr>
+          			<td style="width:50%">
+			           <md-input-container >
+			             <label>Nombre</label> <input ng-model="newAgreement.name"/>
+			           </md-input-container>
+			        </td>
+		         </tr>
+	         </table> 
            </div>
            <div layout="row">
-           <md-input-container >
-             <label>Fecha desde</label><input ng-model="newAgreement.from" type="text" label="desde"/>
-           </md-input-container>
-           <md-input-container >
-             <label>Fecha hasta</label><input ng-model="newAgreement.to" type="text"/>
-           </md-input-container>
+            <table>
+          		<tr>
+          			<td style="width:50%">
+			           <md-input-container >
+			             <label>Fecha desde</label><input ng-model="newAgreement.from" type="text" label="desde" datepicker=""/>
+			           </md-input-container>
+			        </td>
+			        <td style="width:50%">
+			           <md-input-container >
+			             <!-- <label>Fecha hasta</label><input ng-model="newAgreement.to" type="text"/> -->
+			             <label>Fecha hasta</label><input type="text"  ng-model="newAgreement.to" datepicker=""/>
+			             <!-- <time-date-picker ng-model="dateValue"></time-date-picker> -->
+			           </md-input-container>
+					 </td>
+		         </tr>
+	         </table> 
            </div>
-           <div>
-          	 <div>
-	           <md-input-container >
-	            	<md-select placeholder="Tipo" ng-model="newAgreement.type"> <md-option ng-repeat="tipo in agreementsTypes" value="{{tipo.id}}">{{tipo.name}}</md-option></md-select>
-	           </md-input-container>
-	          </div>
-	          <div>
-	            <md-input-container>
-	          		<md-select placeholder="Estado" ng-model="newAgreement.status">
-	          		<md-option ng-repeat="sta in estados" value="{{sta.id}}">{{sta.name}}</md-option> </md-select>
-	           </md-input-container>
-	          </div>
+           <div style="height:100%;width:100%">
+
+          	<table>
+          		<tr>
+          			<td style="width:50%">
+			           <md-input-container style="height:100%;">
+			            	<md-select style="height:100%;" placeholder="Tipo" ng-model="newAgreement.type"> 
+			            	<md-option ng-repeat="tipo in agreementsTypes" value="{{tipo.id}}">{{tipo.name}}</md-option></md-select>
+			           </md-input-container>
+			        </td>
+			        <td style="width:50%">
+			            <md-input-container style="height:100%;">
+			          		<md-select style="height:100%;" placeholder="Estado" ng-model="newAgreement.status">
+			          		<md-option ng-repeat="sta in estados" value="{{sta.id}}">{{sta.name}}</md-option> </md-select>
+			          	</md-input-container>
+			        </td>
+		         </tr>
+	         </table> 
            </div>
            </div>
           </form>

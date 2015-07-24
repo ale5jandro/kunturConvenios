@@ -9,7 +9,7 @@
  * Main module of the application.
  */
 angular
-    .module('kunturApp', ['ngRoute','ngAnimate','ngMaterial', 'users','ngMdIcons','720kb.datepicker','material.wizard'])//'ngMap',
+    .module('kunturApp', ['ngRoute','ngAnimate','ngMaterial', 'users','ngMdIcons','720kb.datepicker','material.wizard','xeditable'])//'ngMap',, 'ui.bootstrap'
 
 .config(function ($routeProvider) {
     $routeProvider
@@ -93,6 +93,20 @@ angular
           });
       };
 
+      dataFactory.findAgreementById=function(callback, id){
+          return $http.get(urlKuntur + 'findAgreementById',{
+            params: {
+              idAgreement:id
+            }
+          })
+          .success(function(data){
+            callback(data);
+          })
+          .error(function(){
+            alert("Se rompio todo con el WS de findAgreementById");
+          });
+      };
+
       dataFactory.getAgreementsTypes=function(callback){
           return $http.get(urlKuntur + 'getAgreementsTypes')
           .success(function(data){
@@ -147,7 +161,16 @@ angular
     
       // };
 
-      dataFactory.setAgreement=function(agreement){
+      dataFactory.loadStatusPromise=function(){
+        return $http.get(urlKuntur + '/getStatus');
+      }
+
+      dataFactory.loadTypesPromise=function(){
+        return $http.get(urlKuntur + '/getAgreementsTypes');
+      }
+
+
+      dataFactory.setAgreement=function(agreement, callback){
         console.log(agreement);
        $http({
             method:"post",
@@ -156,8 +179,11 @@ angular
               agreement:agreement//angular.toJson(plazaIn)
             }
           })
-          .error(function(){
-            alert("no iserto");
+          .success(function(data){
+            callback(data);
+          })
+          .error(function(err){
+            alert(err);
           });
       }
 
@@ -168,8 +194,8 @@ angular
           }
         })
           .success(function(data){
-            console.log("datos");
-            console.log(data);
+            // console.log("datos");
+            // console.log(data);
             callback(data);
           })
           .error(function(){
@@ -274,11 +300,27 @@ angular
   };    
 })
 
-
+.directive('datepicker', function() {
+  return {
+    require: 'ngModel',
+    link: function(scope, el, attr, ngModel) {
+      $(el).datepicker({
+        dateFormat: 'dd-mm-yy',
+        onSelect: function(dateText) {
+          scope.$apply(function() {
+            ngModel.$setViewValue(dateText);
+          });
+        }
+      });
+    }
+  };
+})
 
 .controller('datePickerCtrl', function() {
 
   });
+
+
 
 
 // angular
