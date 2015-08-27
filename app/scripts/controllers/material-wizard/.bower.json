@@ -1,0 +1,21 @@
+{
+  "name": "material-wizard",
+  "description": "Angularjs wizard based on angular material",
+  "main": "dist/material-wizard.js",
+  "version": "0.0.2",
+  "dependencies": {
+    "angular": "~1.2",
+    "angular-material": "master"
+  },
+  "homepage": "https://github.com/Matesign/material-wizard",
+  "_release": "0.0.2",
+  "_resolution": {
+    "type": "version",
+    "tag": "0.0.2",
+    "commit": "16c74d5f361d705499e779453922993af38dd67a"
+  },
+  "_source": "git://github.com/Matesign/material-wizard.git",
+  "_target": "~0.0.2",
+  "_originalSource": "material-wizard",
+  "_direct": true
+}

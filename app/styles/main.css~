@@ -132,20 +132,22 @@ md-content.md-back2-theme {
 }
 
 .banner{
-	background-color:rgb(66,66,66);
+	/*background-color:rgb(66,66,66);*/
 }
 
 .fondoNegro{
-	background-color:black;
+	/*background-color:black;*/
 }
 
 #content{
-	background-color:black;
+	/*background-color:black;*/
 }
 
 #ventanaCargadoraDeConvenios{
 	width:100%;
 	height:100%;
+	max-width: 90%!important;
+	
 }
 
 md-dialog{
@@ -154,6 +156,23 @@ md-dialog{
 
 md-select-label{
 	opacity: 1!important;
+}
+
+inputDatePicker{
+	width:77px!important;
+}
+
+#tab-content-1{
+    overflow: auto;
+    height: 100%;
+}
+
+#tab-content-2{
+    overflow: auto;
+    height: 100%;
+}
+
+#tableContainer{
 }
 
 /*ARREGLO DATEPICEKR*/
@@ -173,8 +192,19 @@ md-select-label{
 }
 /*FIN ARREGLO DATEPICKER*/
 
+.rowAgreement:hover .agreementIcon{
+	 opacity: 0.9;
+}
 
-.wizard-chevron-left , .wizard-chevron-right, .wizard-finish{
+.agreementIcon{
+	opacity: 0;
+}
+
+.agreementIcon:hover{
+	cursor:pointer;
+}
+
+.md-button.wizard-chevron-left , .md-button.wizard-chevron-right, .md-button.wizard-finish{
   background-color: #FFFFFF !important;
   top: 28px;
   right: 10px;
@@ -183,17 +213,46 @@ md-select-label{
   width: 36px !important;
   height: 36px !important;
 }
-.wizard-chevron-left{
+.md-button.wizard-chevron-left{
   background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAQAAABLCVATAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAACYktHRAD/h4/MvwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAIxJREFUSMft1EsKgDAMRdHrCgXrVhyKFVyRn8UpiA60OLJJrQhCA50eQpOXrOKdyhKUoE8he75IyNIA7T2lgw4GegrW55BjBkqW5x2pGBlyzIjxMRKkZvxQAOODHDNRyIwOMsxxmx1E6T5bQWnHL1L6hRSokIh4qbDQTuQxob2omu6Nw7bRpuOfoJ9AOwc6QZmnwxJKAAAAAElFTkSuQmCC');
 }
 .md-button.wizard-chevron-right{
-  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAQAAABLCVATAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAACYktHRAD/h4/MvwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAIdJREFUSMft1UsKgDAMBNApCvVmfu7jUoxeSBHvp6Kuk5HWrpoDPIYkJK5HnHIZytDv0IQDEg7NGG5MwqACG7o3l4Ql8ljQspTeow+UNTWassfvsaKxKWaPKIpbyOqiap1KChEMA1GMDZGMBdGMDn1gNKjEzjN6IsEY44w8FGIctvxFMpQcOgGF5zOZo/Q2nwAAAABJRU5ErkJggg==');
+  background-image: url('/images/chevron_white_right.png');
 }
 
-.wizard-finish{
-  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAQAAABLCVATAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAACYktHRAD/h4/MvwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAL5JREFUSMft1SEOAjEQheF/DVnJkUBhQEAQYLkDjmRLuAqGBIECJEfCrkPAhLS03ekW2XeAL23nta22/CdVgQrUJzVLjvlQzYUJe0we9GYAxjz6Q18ma0VeJh0KMKlQkEmDIkwKFGX0UAfjQlM2rGnTGRuacWbAlYVDKRgb2nEAcCgV427N0ABwY/6hlMzvYduUmvFNTag7K05axj9+oZ4MtUyoR0KpmXAhhVIysWYbGj0TvyIjef3Kv1agjrwAtCRJmbfxwPQAAAAASUVORK5CYII=');
+.md-button.wizard-finish{
+  background-image: url('/images/ok.png');
 }
 
-.md-button{
-	background-image:none;
+.toolbar-button{
+  min-width: 50px;
+  margin: 0px;
 }
+
+.md-whiteframe-z1{
+	box-shadow:none!important;
+}
+
+#rightButton{
+	background-color: #00BCD4!important;
+}
+
+#leftButton{
+	background-color: #00BCD4!important;
+}
+
+#okButton{
+	background-color: green!important;
+}
+
+h3{
+	color:#00BCD4;
+}
+/*
+.md-left{
+  background-color: #00BCD4;
+}
+
+.md-right{
+  background-color: #00BCD4;
+}*/

@@ -1,0 +1,38 @@
+		<div layout="row" style="height:100%;">
+			<div style="overflow:auto;height:100%;">
+	    		<table id="table" class="table table-hover table-mc-light-blue fixed_headers" >
+				    <thead>
+				        <tr>
+				            <th data-title="Universidad"  >Nombre</th>
+				            <th data-title="País" >Apellido</th>
+				            <th data-title="País" >Institucion</th>
+				            <th data-title="País" >In</th>
+				            <th data-title="País" >Out</th>
+				        </tr>
+				    </thead>
+				    <tbody id="universityBody" when-scroll-ends="loadUniversities()">
+					    <tr ng-repeat="contact in newAgreement.Contacts track by $index" >
+					        <td data-title="Universidad" ng-click="openUniversityInfo(university)">
+					            {{contact.person_given_name}}
+					        </td>
+					        <td data-title="Universidad" ng-click="openUniversityInfo(university)">
+					            {{contact.person_family_name}}
+					        </td>
+					    	<td data-title="Universidad" ng-click="openUniversityInfo(university)">
+					            {{contact.org_short_name}}
+					        </td>
+<!-- 						        <td><ng-md-icon icon="add" style="fill:#10BCD4" size="30" ng-click="selectContactIn(contact)"></ng-md-icon></div></td>
+					        <td><ng-md-icon icon="add" style="fill:#10BCD4" size="30" ng-click="selectContactOut(contact)"></ng-md-icon></div></td> -->
+					        <td>
+					        	<md-checkbox ng-model="contact.in" aria-label="Checkbox 1">
+    							</md-checkbox>
+    						</td>
+    						<td>
+					        	<md-checkbox ng-model="contact.out" aria-label="Checkbox 1">
+    							</md-checkbox>
+    						</td>
+					    </tr>
+					</tbody>
+				</table>
+	    	</div>
+	    </div>

@@ -3,7 +3,7 @@
   angular
        .module('kunturApp')
        .controller('KunturControllerChicos', [
-          '$scope','$mdDialog', 'dataFactory', '$mdSidenav', '$mdBottomSheet', '$log', '$q', '$mdUtil',
+          '$scope','$mdDialog', 'dataFactory', '$mdSidenav', '$mdBottomSheet', '$log', '$q', '$mdUtil', '$mdToast',
           KunturController
        ])
 
@@ -16,7 +16,7 @@
    * @param avatarsService
    * @constructor
    */
-  function KunturController( $scope, $mdDialog, dataFactory,$mdSidenav, $mdBottomSheet, $log, $q, $mdUtil) {
+  function KunturController( $scope, $mdDialog, dataFactory,$mdSidenav, $mdBottomSheet, $log, $q, $mdUtil, $mdToast) {
     var self = this;
 
     function toggleUsersList() {
@@ -73,16 +73,18 @@
     $scope.newAgreement.to="";
     $scope.newAgreement.name="";
     $scope.newAgreement.code="";
+    
+
+    $scope.addChildrenOrg = function(org){
+      // console.log(org);
+      if($scope.newAgreement.selectedOrgs2Lvl.indexOf(org)==-1)
+        $scope.newAgreement.selectedOrgs2Lvl.push(org);
+    }
 
     $scope.onFinish = function(){
       var agreementItemOu = {};
       var agreementItem = {};
       var agreement = {};
-
-      //for(var i=0;i<$scope.newAgreement.selectedOrgs2Lvl.length;i++){
-        // console.log($scope.newAgreement.selectedOrgs2Lvl[i]);
-        // console.log($scope.newAgreement.plazasIn[$scope.newAgreement.universities[i].id]);
-        // console.log($scope.newAgreement.plazasOut[$scope.newAgreement.universities[i].id]);
         var agreementItemOu = {};
         console.log("pasa");
         for(var fac in $scope.newAgreement.plazasIn[0]){
@@ -90,18 +92,26 @@
           agreementItemOu.fac=fac;
           agreementItemOu.in=$scope.newAgreement.plazasIn[fac];
           agreementItemOu.out=$scope.newAgreement.plazasOut[fac];
-          // console.log(fac);
-          // console.log($scope.newAgreement.plazasIn[fac]);
-          console.log(agreementItemOu);
         }
       //}
+    }
+
+    $scope.toggleLeft = buildToggler('left');
+
+    function buildToggler(navID) {
+      var debounceFn =  $mdUtil.debounce(function(){
+            $mdSidenav(navID)
+              .toggle()
+              .then(function () {
+                $log.debug("toggle " + navID + " is done");
+              });
+          },200);
+      return debounceFn;
     }
 
     $scope.showContinents = function(){
       $scope.viewContinents = true;
       $scope.viewCountryFilter = false;
-      //setTimeout(activateLists,400); //after transition ended
-      //activateLists();
     };
 
     $scope.showCountries = function(){
@@ -114,8 +124,6 @@
     }; 
 
     $scope.searchByCountry = function(){
-      //$scope.search.country="";
-      //$scope.viewCountryFilter = false;
     }; 
 
     $scope.clearCountryFilter = function(){
@@ -125,23 +133,20 @@
 
     var page = 0;
     $scope.loadUniversities = function(){
+      console.log(page);
       page += 1;
       dataFactory.getUniversities(function(universities){
         $scope.universities = $scope.universities.concat(universities);
-        // console.log($scope.universities);
-      }, page);
+      },$scope.universitiesFilter, page);
     };
 
     $scope.addContryToAgreement=function(university){
       if($scope.newAgreement.universities.indexOf(university)==-1)
         $scope.newAgreement.universities.push(university);
-      //console.log($scope.newAgreement.universities);
-      //console.log(dataFactory.getResponsableXOrgs);
       dataFactory.getResponsableXOrgs(loadContacts, $scope.newAgreement.universities);
     }
 
     var loadContacts=function(data){
-      //console.log(data[0].f_responsablesbyorg.length);
       $scope.newAgreement.Contacts=JSON.parse(data[0].f_responsablesbyorg);
     }
 
@@ -149,7 +154,6 @@
     $scope.removeContryToAgreement=function(university){
       $scope.newAgreement.universities.splice($scope.newAgreement.universities.indexOf(university),1); 
       console.log(university);
-      //for(var i=0;iz)
       $scope.newAgreement.Contacts=$scope.newAgreement.Contacts.filter( function(item) {
         return !(university.id == item.org_id);
       } );
@@ -159,23 +163,31 @@
     }
 
     $scope.searchUniversity=function(){
+      $('#universities').scrollTop(0);
+      page=0;
+      $scope.universities=[];
       $scope.universitiesFilter.searchText=$scope.newAgreement.UniversitySearch;
       dataFactory.getUniversities(getUniversities,$scope.universitiesFilter);
     }
 
     $scope.searchUniversityCountry=function(code){
+      $('#universities').scrollTop(0);
+      page=0;
+      $scope.universities=[];
       $scope.universitiesFilter.countryCode=code;
       dataFactory.getUniversities(getUniversities,$scope.universitiesFilter);
     }
 
     $scope.removeFilters=function(){
+      $('#universities').scrollTop(0);
+      page=0;
+      $scope.universities=[];
       $scope.universitiesFilter.countryCode=null;
       $scope.universitiesFilter.searchText="";
       dataFactory.getUniversities(getUniversities);
     }
 
     $scope.selectContactIn=function(contact){
-      //console.log(contact);
       console.log(contact);
       if($scope.newAgreement.selectedContactsIn.indexOf(contact)==-1)
         $scope.newAgreement.selectedContactsIn.push(contact);
@@ -186,7 +198,6 @@
     }
 
     $scope.selectContactOut=function(contact){
-      //console.log(contact);
       if($scope.newAgreement.selectedContactsOut.indexOf(contact)==-1)
         $scope.newAgreement.selectedContactsOut.push(contact);
     }
@@ -205,8 +216,6 @@
     }
 
     $scope.submitAgreement = function(){
-      //console.log($scope.newAgreement.plazasIn);
-      //dataFactory.setAgreement($scope.newAgreement.plazasIn, $scope.newAgreement.plazasOut);
       var agreement={};
       agreement.agreementItem=[];
       agreement.name=$scope.newAgreement.name;
@@ -217,43 +226,44 @@
       agreement.code=$scope.newAgreement.code;
       for(i in $scope.newAgreement.plazasIn){
         var agreementItem={};
-        //agreementItem.contactIn=[];
-        //agreementItem.contactOut=[];
         agreementItem.agreementItemOu=[];
         agreementItem.id=i;
-        agreementItem.contacts = $.grep($scope.newAgreement.Contacts, function(e){ return (e.org_id == i && (e.in==true || e.out==true)); });
-        //agreementItem.contactOut = $.grep($scope.newAgreement.Contacts, function(e){ return (e.org_id == i && e.out==true); });
+        if($scope.newAgreement.Contacts)
+          agreementItem.contacts = $.grep($scope.newAgreement.Contacts, function(e){ return (e.org_id == i && (e.in==true || e.out==true)); });
         for(j in $scope.newAgreement.plazasIn[i]){
           var agreementItemOu={};
           agreementItemOu.id=j;
           agreementItemOu.in=$scope.newAgreement.plazasIn[i][j];
           agreementItemOu.out=$scope.newAgreement.plazasOut[i][j];
-          //console.log($scope.newAgreement.plazasOut[i][j]);
           agreementItem.agreementItemOu.push(agreementItemOu);
         }
         agreement.agreementItem.push(agreementItem)
       }
-
-
-
-    // for(i in $scope.newAgreement.Contacts){
-    //   if($scope.newAgreement.Contacts[i].in){
-    //     contactIn.push($scope.newAgreement.Contacts[i].id)
-    //   }
-    //   if($scope.newAgreement.Contacts[i].out){
-    //     contactOut.push($scope.newAgreement.Contacts[i].id)
-    //   }
-    // }
   
-    dataFactory.setAgreement(agreement,succesAgreement);
+    if($scope.newAgreement.name=="" || $scope.newAgreement.from=="" || $scope.newAgreement.to=="" || $scope.newAgreement.type=="" || $scope.newAgreement.status==""){
+      //alert("Faltan datos por completar");
+        var toast = $mdToast.simple()
+              .content('Faltan datos por completar')
+              .position('bottom left')
+              .hideDelay(4000);
+        $mdToast.show(toast);
+    }
+    else{
 
-    //   $scope.newAgreement.plazasIn=[];
-    // $scope.newAgreement.plazasOut=[];
+      if(agreement.from>agreement.to){
+        var toast = $mdToast.simple()
+              .content('Fechas Invalidas')
+              .position('bottom left')
+              .hideDelay(4000);
+        $mdToast.show(toast);
+      }else{
+        dataFactory.setAgreement(agreement,succesAgreement);
+      }
+    }
     
     }
 
     var succesAgreement=function(id){
-      // alert(id);
       $mdDialog.hide([id]);
     }
 
@@ -311,8 +321,6 @@
       dataFactory.getCountriesFromContinent(continent.code)
         .success( function(data){
           $scope.continents[index].countries = data["org.geoobject.model.Country"];
-          //onsole.log(array);
-          //setTimeout(activateLists,400);
           if(index==array.length-1)
             activateLists();
           
@@ -329,10 +337,6 @@
         .success(function(data) {
           $scope.continents = data["org.geoobject.model.Continent"];
           $scope.continents.forEach(getCountriesFromContinent);
-          // for(var i=0;i<$scope.continents.length;i++){
-          //   console.log($scope.continents);
-          //   getCountriesFromContinent($scope.continents[i],i);
-          // }
         })
         .error(function (error){
           console.log("Unable to load continents data." + error.message);
@@ -341,13 +345,11 @@
 
     $scope.countries = { 'INT': 'Internacional' };
 
-    //$scope.countries = [];
     getCountries();
     function getCountries() {
       dataFactory.getCountries()
         .success(function(data) {
           $scope.countriesArray = data["org.geoobject.model.Country"];
-          //$scope.countries = {};
           $scope.countriesArray.forEach(function(country){
           $scope.countries[country.code_iso_alfa3] = country.common_name;
           });
@@ -371,10 +373,11 @@
     }
 
     var getOrgs2Lvl=function(data){
-      $scope.newAgreement.orgs2Lvl=data;
+      $scope.orgsTree=[];
+      $scope.orgsTree.push(data);
     }
     
-    dataFactory.getAgreements(getAgreements);
+    // dataFactory.getAgreements(getAgreements);
     dataFactory.getAgreementsTypes(getAgreementsTypes);
     dataFactory.getUniversities(getUniversities);
     dataFactory.orgs2lvl(getOrgs2Lvl);

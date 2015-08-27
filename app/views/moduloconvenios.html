@@ -2,11 +2,11 @@
   <div flex layout="column" tabIndex="-1" role="main" class="md-whiteframe-z0" style="height: 100%;">
 
     <md-toolbar layout="row" class="md-whiteframe-z2 banner" ng-show="!showSearch">
-      
-      	<div style="height:60px;width:60px;margin-left:15px;">
-      		<img src="images/kuntur.png"></img>
+      <div class="md-toolbar-tools" style="padding: 0px 50px;">
+      	<div style="width: 54px;margin-right: 2px;">
+      		<img src="images/kuntur_blanco.png"></img>
       	</div>
-      <div class="md-toolbar-tools">
+      
 
       <md-button class="menu" hide-gt-sm ng-click="ul.toggleList()" aria-label="Mostrar Universidades">
        <md-icon md-svg-icon="menu" ></md-icon>
@@ -14,29 +14,58 @@
 
        <span flex ></span>
 
-          <md-button class="menu" aria-label="Search" ng-click="showSearch=!showSearch" style="padding-top: 4px">
+          <md-button class="menu toolbar-button" aria-label="Search" ng-click="showSearch=!showSearch" style="padding-top: 5px; min-width:50px; margin:0px;">
             <ng-md-icon icon="search" style="fill:white" size="30" ></ng-md-icon>
           </md-button>  
+
+
+          <!-- <md-button class="menu toolbar-button" aria-label="Search" ng-click="changeView()" style="min-width:50px; margin:0px;">
+            <md-tooltip md-delay='800'>
+              <span ng-if='!agreementFilter.showErased'>
+                Mostrar eliminados
+              </span>
+              <span ng-if='agreementFilter.showErased'>
+                Ocultar eliminados 
+              </span>
+            </md-tooltip>
+            <md-icon ng-if='!agreementFilter.showErased' md-font-library="material-icons" >delete</md-icon>
+            <md-icon ng-if='agreementFilter.showErased'  md-svg-icon="images/ic_delete_open_white_24px.svg"></md-icon>
+          </md-button> -->
       </div>
 
     </md-toolbar>
 
 
     <md-toolbar class="md-hue-1 md-whiteframe-z2" ng-show="showSearch" style="background-color:white">
-      <div class="md-toolbar-tools">
-          <md-button class="menu" ng-click="ul.buscar();showSearch = !showSearch;" aria-label="Back" style="padding-top: 4px">
+      <div class="md-toolbar-tools" style="padding: 0px 50px;">
+      <div style="width: 54px;margin-right: 2px;">
+          <img src="images/kuntur.png"></img>
+        </div>
+          <md-button class="menu toolbar-button" ng-click="cleanSearch();" aria-label="Back" style="padding-top: 4px; min-width:58px; margin:0px;">
             <ng-md-icon icon="arrow_back" style="fill:black" size="30" ></ng-md-icon>
           </md-button>
           
             <label>&nbsp;</label>
           <md-input-container md-theme="input" flex md-no-float style="padding-top: 22px;">
-            <input ng-model="cadenaBuscada" placeholder="Buscar..." show-focus="showSearch" >
+            <input ng-keypress="onEnter($event, buscar);" ng-model="agreementFilter.cadenaBuscada" placeholder="Buscar..." show-focus="showSearch" >
           </md-input-container>
-
-          <md-button class="menu" aria-label="Search" ng-click="buscar();showSearch = !showSearch" style="padding-top: 4px">
+       <!--    <md-button class="menu toolbar-button" aria-label="Search" ng-click="changeView()" style="min-width:58px; margin:0px;">
+            <md-tooltip md-delay='800'>
+              <span ng-if='!agreementFilter.showErased'>
+                Mostrar eliminados
+              </span>
+              <span ng-if='agreementFilter.showErased'>
+                Ocultar eliminados
+              </span>
+            </md-tooltip>
+            <md-icon ng-if='!agreementFilter.showErased' md-font-library="material-icons" >delete</md-icon>
+            <md-icon ng-if='agreementFilter.showErased'  md-svg-icon="images/ic_delete_open_black_24px.svg"></md-icon>
+          </md-button> -->
+        <!--   <md-button class="menu" aria-label="Search" ng-click="buscar();" style="padding-top: 4px">
             <ng-md-icon icon="search" style="fill:black" size="30"></ng-md-icon>
           </md-button>
-          
+ -->          
+
 
       </div>
 
@@ -49,42 +78,64 @@
 
 
 
-    <md-content flex id="content" class="md-back2-theme" style="height: 100%;">
+    <md-content flex id="content" class="md-back2-theme" style="height: 100%;" when-scroll-ends="loadAgreements()">
       <md-button class="md-fab  md-fab-bottom-right" aria-label="Agregar Convenio" style="position:fixed" ng-click="showAdd($event)">
       <md-icon md-svg-icon="images/add.svg"></md-icon>
       <md-tooltip md-direction="left" >
         Agregar Convenio
       </md-tooltip>
     </md-button>
-    <!-- Responsive table starts here -->
-    <!-- For correct display on small screens you must add 'data-title' to each 'td' in your table -->
-    <div class="table-responsive-vertical shadow-z-1" style="height: 100%;">
-      <!-- Table starts here -->
-      <table id="table" class="table table-hover table-mc-light-blue" style="height: 100%;">
-        <thead>
-          <tr>
-          	<th>N°</th>
-            <th>Titulo</th>
-            <th>Tipo</th>
-            <th>Desde</th>
-            <th>Hasta</th>
-            <th>Estado</th>
-            <th>Universidades</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr ng-repeat="university in universities" ng-click="toggleRight();getAgreementData(university);">
-          	<td data-title="Numero">{{university.code}}</td>
-            <td data-title="Titulo"><a href="#" editable-text="university.name" ng-click="$event.stopPropagation();">{{university.name}}</a></td>
-            <td data-title="Tipo"><a href="#" editable-select="university.agreement_type_name" onshow="loadTypes()" ng-click="$event.stopPropagation();" e-ng-options="g.name as g.name for g in typesAvaibles">{{university.agreement_type_name}}</a></td>
-            <td data-title="Desde"><span><a href="#" editable-text="university.from_date" ng-click="$event.stopPropagation();">{{university.from_date | date:'dd/MM/yyyy'}}</a></span></td>
-            <td data-title="Hasta"><a href="#" editable-text="university.to_date" ng-click="$event.stopPropagation();">{{university.to_date | date:'dd/MM/yyyy'}}</a></td>
-            <td data-title="Estado"><a href="#" editable-select="university.agreement_status_name" onshow="loadStatus()" ng-click="$event.stopPropagation();" e-ng-options="g.name as g.name for g in statusAvaibles">{{university.agreement_status_name}}</a></td>
-            <td data-title="Universidades">{{university.orgs}}</td>
-          </tr>
-        </tbody>
-      </table>
+
+    <div id="tableContainer">
+      <!-- Responsive table starts here -->
+      <!-- For correct display on small screens you must add 'data-title' to each 'td' in your table -->
+      <div class="table-responsive-vertical shadow-z-1" style="height: 100%;">
+        <!-- Table starts here -->
+        <table id="table" class="table table-hover table-mc-light-blue" style="height: 100%;">
+          <thead>
+            <tr>
+            	<th>N°</th>
+              <th>Titulo</th>
+              <th>Tipo</th>
+              <th>Desde</th>
+              <th>Hasta</th>
+              <th>Estado</th>
+              <th>Universidades</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody style="font-weight: 400;">
+            <tr ng-repeat="university in universities" ng-click="toggleRight();getAgreementData(university);" class="rowAgreement" ng-class="{'universityDeleted': university.erased}">
+            	<td data-title="Numero">{{university.number_agreement}}</td>
+              <!-- <td data-title="Titulo"><a href="#" onaftersave="updateAgreement(university)" editable-text="university.title" ng-click="$event.stopPropagation();">{{university.title}}</a></td> -->
+              <td data-title="Titulo">{{university.title}}</td>
+             <!--  <td data-title="Tipo"><a href="#" onaftersave="updateAgreement(university)" editable-select="university.agreement_type_id" onshow="loadTypes()" ng-click="$event.stopPropagation();" 
+              e-ng-options="g.id as g.name for g in typesAvaibles">{{university.agreement_type_name}}</a></td> -->
+         <!--      <td data-title="Tipo">{{university.agreement_type_name}}</td>
+              <td data-title="Desde"><a style="width:77px;" href="#" editable-bsdate="university.from_date" onaftersave="updateAgreement(university)" ng-click="$event.stopPropagation();">{{university.from_date | date:'dd-MM-yyyy'}}
+              </a></td>
+              <td data-title="Hasta"><a style="width:77px;" href="#" onaftersave="updateAgreement(university)" editable-bsdate="university.to_date" ng-click="$event.stopPropagation();">{{university.to_date | date:'dd-MM-yyyy'}}
+              </a></td>
+              <td data-title="Estado"><a href="#" onaftersave="updateAgreement(university)" editable-select="university.agreement_status_id" onshow="loadStatus()" ng-click="$event.stopPropagation();" 
+              e-ng-options="g.id as g.name for g in statusAvaibles">{{university.agreement_status_name}}</a></td> -->
+              <td data-title="Tipo">{{university.agreement_type_name}}</td>
+              <td data-title="Desde">{{university.from_date | date:'dd-MM-yyyy'}}</td>
+              <td data-title="Hasta">{{university.to_date | date:'dd-MM-yyyy'}}</td>
+              <td data-title="Estado">{{university.agreement_status_name}}</td>
+              <td data-title="Universidades">{{university.orgs}}</td>
+              <td ng-if='!university.erased'>
+                <md-icon class="agreementIcon" md-font-library="material-icons" style="margin-right:4px" ng-click="$event.stopPropagation();modResponsables($event,university)">edit</md-icon>
+                <md-icon class="agreementIcon" md-font-library="material-icons" style="margin-right:-12px" ng-click="$event.stopPropagation();deleteAgreement(university)">delete</md-icon>
+              </td>
+              <td ng-if='university.erased'>
+                <md-icon class="agreementIcon" md-font-library="material-icons" style="margin-left:17px;font-size: 19pt;" ng-click="$event.stopPropagation();reinsertAgreement(university)">undo</md-icon>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
+
     </md-content>
 
   </div>
@@ -97,35 +148,25 @@
       <md-toolbar class="md-theme-light banner">
         <md-list>
           <md-list-item class="md-3-line">
-<!--             <img src="/images/logo-unc.png" style="background-color:white" class="avatar">
-              <div class="md-list-item-text">
-                <h1>UNIVERSIDAD NACIONAL DE CÓRDOBA</h1>
-                <h4 style="color:white">(UNC)</h4>
-                <p style="color:white">www.unc.edu.ar</p>
-              </div> -->
-
 
         </md-list-item>
         	<b style="margin-left:20px;">N° {{convenioSeleccionado.nro}}</b>
         	<b style="margin-left:20px;">{{convenioSeleccionado.nombre}}</b>
+          <!--<md-button  ng-click="modResponsables()">Modificar</md-button>-->
         </md-list>
 
       </md-toolbar>
-      <!--
-        <div>
-        <img src="/images/logo-unc.jpg" style="border-radius:50%; width:70px; height:70px; posi" flex="10"><h1 class="md-toolbar-tools"> UNIVERSIDAD NACIONAL de CÓRDOBA</h1></div>
-          <BR><h3>wwww.unc.edu.ar</h3>
-      -->
-      <div style="overflow:visible;height:100%;"><!--"-->
-      <md-tabs md-dynamic-height="true" md-border-bottom="" class="kunturTabs" md-stretch-tabs="always" style="min-height:100%;height:100%!important;overflow:visible;" ><!-- -->
 
-        <md-tab label="Plazas" >
-          <md-content class="md-padding md-back-theme flex-container">
+      <div style="height:100%;"><!--"-->
+      <md-tabs md-dynamic-height="true" md-border-bottom="" class="kunturTabs" md-stretch-tabs="always" style="min-height:100%;height:100%!important;overflow:auto;" ><!-- -->
+
+        <md-tab label="Plazas" style="height:100%;overflow:auto;">
+          <md-content class="md-padding md-back-theme flex-container" style="height:100%;">
 
               <div class="palabrasCabeceraConvenio" ng-if="convenioSeleccionado.cantidad>1">{{convenioSeleccionado.tipo}} entre Universidad Nacional de Cordoba (UNC) y las siguientes {{convenioSeleccionado.cantidad}} universidades:</div>
               <div class="palabrasCabeceraConvenio" ng-if="convenioSeleccionado.cantidad==1">{{convenioSeleccionado.tipo}} entre Universidad Nacional de Cordoba (UNC) y la siguiente universidad:</div>
           
-             <table id="tableDataPlazas" class="tablaQSeVe table table-hover table-mc-light-blue">
+             <table id="tableDataPlazas" class="tablaQSeVe table table-hover table-mc-light-blue" style="height:100%;">
                     <thead>
                       <tr>
                         <th ng-repeat="(key, data) in plazas.datos[0] track by $index">{{key}}</th>
@@ -133,11 +174,11 @@
                     </thead>
                     <tbody>
                       <tr ng-repeat="plaza in plazas.datos">
-                        <td data-title="Titulo" ng-repeat="(key, data) in plaza track by $index">{{data}}</td>
+                        <td data-title="Titulo" ng-repeat="(key, data) in plaza track by $index">
+                        {{data}}</td>
                       </tr>
                     </tbody>
              </table>
-
         </md-content>
 
         </md-tab>
@@ -162,7 +203,7 @@
                       </tr>
                     </tbody>
              </table>
-
+             
         </md-content>
         </md-tab>
 

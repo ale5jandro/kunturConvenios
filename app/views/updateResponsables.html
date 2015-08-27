@@ -1,10 +1,9 @@
-<md-dialog aria-label="Mango (Fruit)" id="ventanaCargadoraDeConvenios" style="overflow:auto;">
-<div style="display:flex; height:100%" ng-controller="KunturControllerChicos">
-<div style="position: absolute;left: 98%;top:4px;cursor:pointer;size:10px;" ng-click="cancelAgreement();"><i style="font-size:15px" class="material-icons">clear</i></div>
-   <mt-wizard btn-progress-color="#D8D8D8" style="height:100%;display:flex;width:100%;" btn-bg-color="#FAFAFA" active-btn-bg-color="#E9E9E9" chevrons-always-visible="true" 
+<md-dialog aria-label="Mango (Fruit)" id="ventanaCargadoraDeConvenios" style="overflow:auto;">	
+	<div style="position: absolute;left: 98%;top:4px;cursor:pointer;size:10px;" ng-click="cancelAgreement();"><i style="font-size:15px" class="material-icons">clear</i></div>
+	<mt-wizard btn-progress-color="#D8D8D8" style="height:100%;display:flex;width:100%;" btn-bg-color="#FAFAFA" active-btn-bg-color="#E9E9E9" chevrons-always-visible="true" 
    on-finish="submitAgreement()">
-    
-    <mt-wz-step title="Nuevo Convenio" step-img="images/ic_settings_white_24px.svg"   on-exit="onExitStep1()" btn-bg-color="#00BCD4" active-btn-bg-color="#00BCD4">
+		 
+		<mt-wz-step title="Modificar Convenio" step-img="images/ic_settings_white_24px.svg"   on-exit="onExitStep1()" >
         <form name="formStep1"  novalidate layout="column" layout-sm="column" layout-align="start start">
         	<div layout-sm="column" style="height:100%;margin:auto;">
 
@@ -13,7 +12,7 @@
           		<tr>
           			<td style="width:50%">
 			           <md-input-container >
-			             <label>Nombre</label> <input ng-model="newAgreement.name"/>
+			             <label>Nombre</label> <input ng-model="newAgreement.title"/>
 			           </md-input-container>
 			        </td>
 		         </tr>
@@ -24,13 +23,13 @@
           		<tr>
           			<td style="width:50%">
 			           <md-input-container >
-			             <label>Fecha desde</label><input ng-model="newAgreement.from" type="text" label="desde" datepicker=""/>
+			             <label>Fecha desde</label><input ng-model="newAgreement.from_date" type="text" label="desde" datepicker=""/>
 			           </md-input-container>
 			        </td>
 			        <td style="width:50%">
 			           <md-input-container >
 			             <!-- <label>Fecha hasta</label><input ng-model="newAgreement.to" type="text"/> -->
-			             <label>Fecha hasta</label><input type="text"  ng-model="newAgreement.to" datepicker=""/>
+			             <label>Fecha hasta</label><input type="text"  ng-model="newAgreement.to_date" datepicker=""/>
 			             <!-- <time-date-picker ng-model="dateValue"></time-date-picker> -->
 			           </md-input-container>
 					 </td>
@@ -43,13 +42,13 @@
           		<tr>
           			<td style="width:50%">
 			           <md-input-container style="height:100%;">
-			            	<md-select style="height:100%;" placeholder="Tipo" ng-model="newAgreement.type"> 
+			            	<md-select style="height:100%;" placeholder="Tipo" ng-model="newAgreement.agreement_type_id"> 
 			            	<md-option ng-repeat="tipo in agreementsTypes" value="{{tipo.id}}">{{tipo.name}}</md-option></md-select>
 			           </md-input-container>
 			        </td>
 			        <td style="width:50%">
 			            <md-input-container style="height:100%;">
-			          		<md-select style="height:100%;" placeholder="Estado" ng-model="newAgreement.status">
+			          		<md-select style="height:100%;" ng-model="newAgreement.agreement_status_id">
 			          		<md-option ng-repeat="sta in estados" value="{{sta.id}}">{{sta.name}}</md-option> </md-select>
 			          	</md-input-container>
 			        </td>
@@ -59,12 +58,11 @@
            </div>
           </form>
     </mt-wz-step>
-    <mt-wz-step title="Universidades" step-img="images/ic_account_balance_white_24px.svg" style="display:flex;height:100%">
 
-	
-   		<div layout="row" style="font-size: 1rem;display:flex;height:100%;width:100%"><!--margin-top:60px;-->
+	    <mt-wz-step title="Universidades" step-img="images/ic_account_balance_white_24px.svg" style="display:flex;height:100%">
 
-   		    <md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="left">
+	   		<div layout="row" style="font-size: 1rem;display:flex;height:100%;width:100%"><!--margin-top:60px;-->
+	   		    <md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="left">
    		    <div style="height:100%;overflow:auto;" >
 	   		    
 				<div>
@@ -111,8 +109,8 @@
 	          		  <div ng-if="universitiesFilter.countryCode!=null" style="margin:auto;font-size:12pt;">Mostrando universidades de {{universitiesFilter.countryCode}}</div>
 				    </md-input-container>
 				</div>
-				<div layout="row" style="height:80%;">
-			    	<div flex="50" style="overflow:auto;border:1px solid;border-color: #C7C7C7;" id="universities" when-scroll-ends="loadUniversities()">
+			    <div layout="row" style="height:80%;">
+			    	<div flex="50" id="universitiesContainer" style="overflow:auto;border:1px solid;border-color: #C7C7C7;" when-scroll-ends="loadUniversities()">
 			    		{{universities.name}}
 			    		<table id="table" class="table table-hover table-mc-light-blue fixed_headers" style="z-index:10;">
 						    <thead>
@@ -123,7 +121,7 @@
 						            <!-- <th data-title="País" >País</th> -->
 						        </tr>
 						    </thead>
-						    <tbody id="universityBody">
+						    <tbody id="universityBody" >
 							    <tr ng-repeat="university in universities" ng-if="university.primary_org!=true">
 							        <td data-title="Universidad" ng-click="openUniversityInfo(university)">
 							            {{university.original_name}}
@@ -131,7 +129,7 @@
 							        <td data-title="Universidad" ng-click="openUniversityInfo(university)">
 							            {{university.short_name}}
 							        </td>
-							       <!--  <td data-title="País" style="padding-left:0px; padding-right:0px;" >
+							   <!--      <td data-title="País" style="padding-left:0px; padding-right:0px;" >
 								        <img ng-src="images/flags/{{university.country_code | lowercase}}.gif " style="display:inline"/>
 							        </td> -->
 							        <td><ng-md-icon icon="add" style="fill:#00BCD4" size="30" ng-click="addContryToAgreement(university)"></ng-md-icon></div></td>
@@ -139,11 +137,11 @@
 							</tbody>
 						</table>
 			    	</div>
-			    	<div flex="50" style="overflow:auto;border:1px solid;border-color: #C7C7C7;">
+			    	<div flex="50" style="overflow:auto;border:1px solid;border-color: #C7C7C7;" >
 			    		<table id="table" class="table table-hover table-mc-light-blue fixed_headers" style="z-index:10;">
-						    <thead style="color:#00BCD4">
+						    <thead>
 						        <tr>
-						            <th data-title="Universidad" style="color:#00BCD4" width="70%">Universidad</th>
+						            <th data-title="Universidad"  style="color:#00BCD4" width="70%">Universidad</th>
 						            <th data-title="País" style="color:#00BCD4" width="20%">Sigla</th>
 						            <th data-title="Agregar" style="color:#00BCD4" width="10%">Quitar</th>
 						            <!-- <th data-title="País" >País</th> -->
@@ -157,7 +155,7 @@
 							        <td data-title="Universidad" ng-click="openUniversityInfo(university)">
 							            {{university.short_name}}
 							        </td>
-							       <!--  <td data-title="País" style="padding-left:0px; padding-right:0px;" >
+							 <!--        <td data-title="País" style="padding-left:0px; padding-right:0px;" >
 								        <img ng-src="images/flags/{{university.country_code | lowercase}}.gif " style="display:inline">
 							        </td> -->
 							        <td><ng-md-icon icon="undo" style="fill:#00BCD4" size="30" ng-click="removeContryToAgreement(university)"></ng-md-icon></div></td>
@@ -165,15 +163,13 @@
 							</tbody>
 						</table>
 			    	</div>
+			    	</div>
 		    	</div>
 	    	</div>
-    	</div>
-
-
-    </mt-wz-step>
-    <mt-wz-step title="Responsables" step-img="images/ic_person_white_24px.svg" style="height:100%;">
-    		<div layout="row" style="height:100%;">
-		    	<div style="overflow:auto;height:100%;margin:auto;" ng-if="newAgreement.universities != 0 ">
+	    </mt-wz-step>
+   		<mt-wz-step title="Responsables" step-img="images/ic_person_white_24px.svg"   on-exit="onExitStep1()" >
+			<div layout="row" style="height:100%;" ng-if="newAgreement.universities != 0">
+				<div style="overflow:auto;height:100%;margin:auto;">
 		    		<table id="table" class="table table-hover table-mc-light-blue fixed_headers" >
 					    <thead>
 					        <tr>
@@ -194,37 +190,36 @@
 						        </td>
 						    	<td data-title="Universidad" ng-click="openUniversityInfo(university)">
 						            {{contact.org_short_name}}
-						        </td>						        <td>
-						        	<md-checkbox ng-model="contact.in" aria-label="Checkbox 1">
-        							</md-checkbox>
-        						</td>
-        						<td>
-						        	<md-checkbox ng-model="contact.out" aria-label="Checkbox 1">
-        							</md-checkbox>
-        						</td>
+						        </td>
+						        <td>
+						        	<md-checkbox ng-model="contact.in" ng-click="selectContact(contact)" aria-label="Checkbox 1">
+	    							</md-checkbox>
+	    						</td>
+	    						<td>
+						        	<md-checkbox ng-model="contact.out" ng-click="selectContact(contact)" aria-label="Checkbox 1">
+	    							</md-checkbox>
+	    						</td>
 						    </tr>
 						</tbody>
 					</table>
 		    	</div>
-		    	<div class="general-info-div" layout="column" layout-align="center center" style="overflow:auto;height:100%;width:100%;" ng-if="newAgreement.universities == 0 ">
-            		<div style="margin-bottom:12px">
-              			<img src="/images/empty_university.png">
-            		</div>
-            		<div>
-              			<p align="center" class="md-display-1" style="color:darkgray;margin:0px">
-                			Ningún Responsable asociado
-              			</p>
-              			<p align="center" class="md-subhead " style="color:darkgray">
-                			Añade Universidades
-              			</p>
-            		</div>
-          		</div>
 		    </div>
+		    <div class="general-info-div" layout="column" layout-align="center center" style="overflow:auto;height:100%;width:100%;" ng-if="newAgreement.universities == 0 ">
+            	<div style="margin-bottom:12px">
+            		<img src="/images/empty_university.png">
+            	</div>
+            	<div>
+            		<p align="center" class="md-display-1" style="color:darkgray;margin:0px">
+               			Ningún Responsable asociado
+            		</p>
+            		<p align="center" class="md-subhead " style="color:darkgray">
+               			Añade Universidades
+            		</p>
+            	</div>
+          	</div>
+		</mt-wz-step>
 
-
-
-    </mt-wz-step>
-    <mt-wz-step title="Unidades Académicas" step-img="images/ic_school_white_24px.svg" style="height:100%;">
+	    <mt-wz-step title="Unidades Académicas" step-img="images/ic_school_white_24px.svg" style="height:100%;">
     		<div layout="row" style="height:100%;">
 		    	<div flex="50" style="overflow:auto;"
 					  data-tree-id="arbol"
@@ -238,15 +233,15 @@
 		    		<table id="table" class="table table-hover table-mc-light-blue fixed_headers" >
 					    <thead>
 					        <tr>
-					            <th data-title="Universidad" style="color:#00BCD4" >Unidad Académica</th>
-					            <th data-title="País" style="color:#00BCD4" >Sigla</th>
+					            <th data-title="Universidad"  style="color:#00BCD4">Unidad Académica</th>
+					            <th data-title="País" style="color:#00BCD4">Sigla</th>
 					            <th data-title="País" style="color:#00BCD4">Quitar</th>
 					        </tr>
 					    </thead>
 					    <tbody id="universityBody" when-scroll-ends="loadUniversities()">
 						    <tr ng-repeat="org in newAgreement.selectedOrgs2Lvl track by $index" >
 						        <td data-title="Universidad" ng-click="openUniversityInfo(university)">
-						            {{org.original_name}}
+						            {{org.short_name}}
 						        </td>
 						        <td data-title="Universidad" ng-click="openUniversityInfo(university)">
 						            {{org.short_name}}
@@ -260,14 +255,14 @@
 
     </mt-wz-step>
 
-    <mt-wz-step title="Plazas" step-img="images/img_agreement.svg" style="height:100%;overflow:auto;">
-	    <div style="height:100%;" ng-if="newAgreement.selectedOrgs2Lvl.length != 0 && newAgreement.universities.length != 0">
+    <mt-wz-step title="Plazas" step-img="views/step3.svg" style="height:100%;overflow:auto;">
+    	<div style="height:100%;" ng-if="newAgreement.selectedOrgs2Lvl.length != 0 && newAgreement.universities.length != 0">
 	        <table id="tableDataPlazas" class="tablaQSeVe table table-hover table-mc-light-blue">
 	            <thead>
 	                <tr>
 	                	<th></th>
-	                	<th style="color:#00BCD4;">UNC</th>
-	                    <th style="color:#00BCD4;" ng-repeat="(key, data) in newAgreement.selectedOrgs2Lvl track by $index">{{data.short_name}}</th>
+	                	<th style="color:#00BCD4">UNC</th>
+	                    <th style="color:#00BCD4" ng-repeat="(key, data) in newAgreement.selectedOrgs2Lvl track by $index">{{data.short_name}}</th>
 	                </tr>
 	            </thead>
 	            <tbody>
@@ -276,20 +271,20 @@
 	                	<td>{{data.short_name}}</td>
 	                	<td>
 	                		<div layout="row">	
-								<md-input-container style="width:50px;"><input name="newAgreement.plazasInUNC{{$index}}" ng-model="newAgreement.plazasIn[data.id]['UNC']"
-								 onkeydown='allowNumericInputOnly(event)' style="text-align: center;">
+								<md-input-container style="width:50px;"><input name="newAgreement.plazasInUNC{{$index}}" ng-model="newAgreement.plazasIn[data.id]['UNC']" 
+								onkeydown='allowNumericInputOnly(event)' style="text-align: center;">
 								</input></md-input-container> _ 
-								<md-input-container style="width:50px;"><input name="newAgreement.plazasInUNC{{$index}}" ng-model="newAgreement.plazasOut[data.id]['UNC']"
-								 onkeydown='allowNumericInputOnly(event)' style="text-align: center;">
+								<md-input-container style="width:50px;"><input name="newAgreement.plazasInUNC{{$index}}" ng-model="newAgreement.plazasOut[data.id]['UNC']" 
+								onkeydown='allowNumericInputOnly(event)' style="text-align: center;">
 								</input></md-input-container>
 	                		</div>
 	                	</td>
 	                	<td ng-repeat="(key, data) in newAgreement.selectedOrgs2Lvl track by $index">
 	                		<div layout="row">
-							 	<md-input-container style="width:50px;"><input name="newAgreement.plazasIn{{$parent.$index}}{{$index}}" ng-model="newAgreement.plazasIn[$parent.data.id][data.id]" style="text-align: center;"
-							 	 onkeydown='allowNumericInputOnly(event)'>
-							 	</input></md-input-container> _ 
-							 	<md-input-container style="width:50px;"><input name="newAgreement.plazasOut{{$parent.$index}}{{$index}}" ng-model="newAgreement.plazasOut[$parent.data.id][data.id]" style="text-align: center;"
+							 	<md-input-container style="width:50px;"><input name="newAgreement.plazasIn{{$parent.$index}}{{$index}}" ng-model="newAgreement.plazasIn[$parent.data.id][data.org_id]" style="text-align: center;"
+							 	onkeydown='allowNumericInputOnly(event)'>
+							 	</input></md-input-container> _
+							 	<md-input-container style="width:50px;"><input name="newAgreement.plazasOut{{$parent.$index}}{{$index}}" ng-model="newAgreement.plazasOut[$parent.data.id][data.org_id]" style="text-align: center;"
 							 	 onkeydown='allowNumericInputOnly(event)'>
 							 	</input></md-input-container>
 							</div>
@@ -297,10 +292,11 @@
 	                    <!--<td data-title="Titulo" ng-repeat="(key, data) in newAgreement.universities track by $index">{{data.short_name}}</td>-->
 	                </tr>
 	            </form>
+	           
 	            </tbody>
 	        </table>
-	    </div>
-	   	<div class="general-info-div" layout="column" layout-align="center center" style="overflow:auto;height:100%;width:100%;" 
+        </div>
+       	<div class="general-info-div" layout="column" layout-align="center center" style="overflow:auto;height:100%;width:100%;" 
 	   	ng-if="newAgreement.selectedOrgs2Lvl.length < 1 || newAgreement.universities.length < 1">
         	<div style="margin-bottom:12px">
         		<img src="/images/empty_university.png">
@@ -315,10 +311,10 @@
         	</div>
         </div>
 
+
     </mt-wz-step>
-   
 
-  </mt-wizard>
 
-</div>
+
+	</mt-wizard>
 </md-dialog>

@@ -9,7 +9,7 @@
  * Main module of the application.
  */
 angular
-    .module('kunturApp', ['ngRoute','ngAnimate','ngMaterial', 'users','ngMdIcons','720kb.datepicker','material.wizard','xeditable'])//'ngMap',, 'ui.bootstrap'
+    .module('kunturApp', ['ngRoute','ngAnimate','ngMaterial', 'users','ngMdIcons','material.wizard','xeditable', 'angularTreeview', 'datetime'])//'ngMap',, 'ui.bootstrap'
 
 .config(function ($routeProvider) {
     $routeProvider
@@ -44,10 +44,11 @@ angular
                 .icon("twitter"    , "styles/svg/twitter.svg"     , 512)
                 .icon("phone"      , "styles/svg/phone.svg"       , 512);
 
-                  $mdThemingProvider.theme('default')
+                 
+                $mdThemingProvider.theme('default')
                       .primaryPalette('cyan')
-                      .accentPalette('lime', {
-      'default': '500' // use shade 200 for default, and keep all other shades the same
+                      .accentPalette('purple', {
+                        'default': '400'
 
     });
 
@@ -61,6 +62,7 @@ angular
       var urlGeoObjectWS= 'http://nodejs-nodo1-dev.psi.unc.edu.ar:3005/'; //TODO: replace it for the actual url' 
       var dataFactory = {};
       var urlKuntur = 'http://172.16.248.194:8080/'
+      var lastElementDeleted;
       
       dataFactory.getContinents=function(){
         return $http.get(urlGeoObjectWS + 'continents');
@@ -79,16 +81,26 @@ angular
           return $http.get(urlGeoObjectWS + 'countries');
       };
 
-      dataFactory.getAgreements=function(callback, cadenaBuscada){
+      dataFactory.getAgreements=function(callback, filtrosAgreement, page){
+          
+          console.log(page);
+          var pageSize = 30;
+          if(page)
+            var offset = page * pageSize;
+          else
+            var offset = 0;
           return $http.get(urlKuntur + 'getAgreements',{
             params: {
-              busqueda:cadenaBuscada
+              filter:filtrosAgreement,
+              offset:offset,
+              pageSize:pageSize
             }
           })
           .success(function(data){
             callback(data);
           })
-          .error(function(){
+          .error(function(err){
+            console.log(err);
             alert("Se rompio todo con el WS de agreements");
           });
       };
@@ -171,7 +183,6 @@ angular
 
 
       dataFactory.setAgreement=function(agreement, callback){
-        console.log(agreement);
        $http({
             method:"post",
             url: urlKuntur + 'insertarAgreement',
@@ -220,7 +231,7 @@ angular
             }
         })
         .success(function(data){
-          console.log(data);
+          // console.log(data);
           callback(data);
         })
         .error(function(){
@@ -250,6 +261,49 @@ angular
           });
       }
 
+      dataFactory.deleteAgreement=function(agreId, callback){
+        lastElementDeleted=agreId;
+        $http.get(urlKuntur + 'deleteAgreement',{
+          params: {
+            agrId:agreId
+          }
+        })
+          .success(function(data){
+            callback();
+          })
+          .error(function(mes){
+            alert(mes);
+          });
+      }
+
+      dataFactory.reinsertAgreement=function(agrId, callback){
+        if(agrId!=0){//si es cero quiere decir que tengo que reinsertar el ultimo borrado
+          $http.get(urlKuntur + 'reinsertAgreement',{
+            params: {
+              agrId:agrId
+            }
+          })
+            .success(function(data){
+              callback();
+            })
+            .error(function(){
+              alert("Se rompio todo con el WS de deleteAgr");
+            });
+        }else{
+          $http.get(urlKuntur + 'reinsertAgreement',{
+            params: {
+              agrId:lastElementDeleted
+            }
+          })
+            .success(function(data){
+              callback();
+            })
+            .error(function(){
+              alert("Se rompio todo con el WS de deleteAgr");
+          });
+        }
+      }
+
       dataFactory.orgs2lvl=function(callback){
         $http.get(urlKuntur + 'orgs2lvl')
           .success(function(data){
@@ -260,13 +314,58 @@ angular
           });
       }
 
+      dataFactory.updateAgreement=function(agr){
+        $http({
+          method:"post",
+          url:urlKuntur + 'updateAgreement',
+          data:{
+            agreement:agr
+          }
+        })
+          .success(function(data){
+          })
+          .error(function(message){
+            alert(message);
+            console.log(message);
+          });
+      }
+
+      dataFactory.updateAgreementData=function(agr){
+        $http({
+          method:"post",
+          url:urlKuntur + 'updateAgreementData',
+          data:{
+            agreement:agr
+          }
+        })
+          .success(function(data){
+          })
+          .error(function(message){
+            alert(message);
+            console.log(message);
+          });
+      }
+
+      dataFactory.getSelectedOrgs = function(id, callback){
+          return $http.get(urlKuntur + 'agreementData',{
+            params: {
+              agrId:id
+            }
+          })
+          .success(function(data){
+            callback(data);
+          })
+          .error(function(){
+            alert("Se rompio todo con el WS de getSelectedOrgs");
+          });
+      }
+
       dataFactory.getUniversities = function (callback,universitiesFilter, page){
         var pageSize = 30;
         if(page)
           var offset = page * pageSize;
         else
           var offset = 0;
-
         var url = urlKuntur + 'universities?offset='+ offset +'&limit='+pageSize;
 
         if(universitiesFilter){
@@ -300,6 +399,34 @@ angular
   };    
 })
 
+.directive('whenScrollEnds', function() {
+        return {
+            restrict: "A",
+            link: function(scope, element, attrs) {
+                //console.log(element);
+                
+                var threshold = 200;
+                element.scroll(function() {
+                    var visibleHeight = element.height();
+                    var scrollableHeight = element.prop('scrollHeight');
+                    var hiddenContentHeight = scrollableHeight - visibleHeight;
+                    // console.log("scrollableHeight");
+                    // console.log(scrollableHeight);
+                    // console.log("visibleHeight");
+                    // console.log(visibleHeight);
+                    // console.log("element.scrollTop()");
+                    // console.log(element.scrollTop());
+                    // console.log("re");
+                    // console.log(hiddenContentHeight - element.scrollTop());
+                    if (hiddenContentHeight - element.scrollTop() <= threshold) {
+                        // Scroll is almost at the bottom. Loading more rows
+                        scope.$apply(attrs.whenScrollEnds);
+                    }
+                });
+            }
+        };
+})
+
 .directive('datepicker', function() {
   return {
     require: 'ngModel',
@@ -314,14 +441,36 @@ angular
       });
     }
   };
-})
+});
 
-.controller('datePickerCtrl', function() {
+// app.factory('dateService', [function(){
+//   return { items: [] };
+// }]);
 
-  });
+var findFirstOccurrence = function(array, property, value){
+  for(var i = 0 ; i < array.length; i++){
+    if(array[i][property]==value){
+      return array[i];
+    }
+  }
+  return -1;
+}
 
-
-
+var allowNumericInputOnly = function (e) {
+      // Allow: backspace, delete, tab, escape, enter and whitespace
+      if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 32]) !== -1 ||
+           // Allow: Ctrl+A
+          (e.keyCode == 65 && e.ctrlKey === true) ||
+           // Allow: home, end, left, right
+          (e.keyCode >= 35 && e.keyCode <= 39)) {
+               // let it happen, don't do anything
+               return;
+      }
+      // Ensure that it is a number and stop the keypress
+      if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+          e.preventDefault();
+      }
+}
 
 // angular
 //   .module('kunturApp', [

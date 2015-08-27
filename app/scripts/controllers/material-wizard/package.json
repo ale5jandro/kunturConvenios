@@ -1,0 +1,16 @@
+{
+  "name": "material-wizard",
+  "version": "0.0.2",
+  "author" :"Adel",
+  "dependencies": {},
+  "devDependencies": {
+    "grunt": "*",
+    "grunt-bump": "^0.3.0",
+    "grunt-contrib-clean": "^0.6.0",
+    "grunt-contrib-concat": "^0.5.1",
+    "grunt-contrib-cssmin": "^0.12.2",
+    "grunt-contrib-uglify": "*",
+    "grunt-zip": "^0.16.2",
+    "load-grunt-tasks": "~0.4.0"
+  }
+}
