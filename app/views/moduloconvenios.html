@@ -4,10 +4,11 @@
     <md-toolbar layout="row" class="md-whiteframe-z2 banner" ng-show="!showSearch">
       <div class="md-toolbar-tools" style="padding: 0px 50px;">
       	<div style="width: 54px;margin-right: 2px;">
-      		<img src="images/kuntur_blanco.png"></img>
+      		<img style="width: 54px;margin-right: 2px;max-width: 54px;" src="images/kuntur_blanco.png"></img>
       	</div>
-      
-
+        <div style="width: 100%;">
+          Gestión de acuerdos
+        </div>
       <md-button class="menu" hide-gt-sm ng-click="ul.toggleList()" aria-label="Mostrar Universidades">
        <md-icon md-svg-icon="menu" ></md-icon>
       </md-button >
@@ -16,6 +17,9 @@
 
           <md-button class="menu toolbar-button" aria-label="Search" ng-click="showSearch=!showSearch" style="padding-top: 5px; min-width:50px; margin:0px;">
             <ng-md-icon icon="search" style="fill:white" size="30" ></ng-md-icon>
+            <md-tooltip md-direction="left" >
+              Buscar acuerdo
+            </md-tooltip>
           </md-button>  
 
 
@@ -47,7 +51,7 @@
           
             <label>&nbsp;</label>
           <md-input-container md-theme="input" flex md-no-float style="padding-top: 22px;">
-            <input ng-keypress="onEnter($event, buscar);" ng-model="agreementFilter.cadenaBuscada" placeholder="Buscar..." show-focus="showSearch" >
+            <input ng-keypress="onEnter($event, buscar);" ng-model="agreementFilter.cadenaBuscada" placeholder="Buscar acuerdo..." show-focus="showSearch" >
           </md-input-container>
        <!--    <md-button class="menu toolbar-button" aria-label="Search" ng-click="changeView()" style="min-width:58px; margin:0px;">
             <md-tooltip md-delay='800'>
@@ -80,7 +84,8 @@
 
     <md-content flex id="content" class="md-back2-theme" style="height: 100%;" when-scroll-ends="loadAgreements()">
       <md-button class="md-fab  md-fab-bottom-right" aria-label="Agregar Convenio" style="position:fixed" ng-click="showAdd($event)">
-      <md-icon md-svg-icon="images/add.svg"></md-icon>
+      <md-icon md-svg-icon="images/add.svg" style="fill:white; margin-left:-4px"></md-icon>
+      <md-icon md-svg-icon="images/img_agreement.svg" style="fill: white;margin-left: -8px;"></md-icon>
       <md-tooltip md-direction="left" >
         Agregar Convenio
       </md-tooltip>
@@ -95,7 +100,7 @@
           <thead>
             <tr>
             	<th>N°</th>
-              <th>Titulo</th>
+              <th>Título</th>
               <th>Tipo</th>
               <th>Desde</th>
               <th>Hasta</th>
@@ -123,7 +128,7 @@
               <td data-title="Hasta">{{university.to_date | date:'dd-MM-yyyy'}}</td>
               <td data-title="Estado">{{university.agreement_status_name}}</td>
               <td data-title="Universidades">{{university.orgs}}</td>
-              <td ng-if='!university.erased'>
+              <td ng-if='university.convenios<1'>
                 <md-icon class="agreementIcon" md-font-library="material-icons" style="margin-right:4px" ng-click="$event.stopPropagation();modResponsables($event,university)">edit</md-icon>
                 <md-icon class="agreementIcon" md-font-library="material-icons" style="margin-right:-12px" ng-click="$event.stopPropagation();deleteAgreement(university)">delete</md-icon>
               </td>
@@ -143,14 +148,14 @@
 
   <!-- TOGGLE RIGHT-->
 
-  <md-sidenav class="md-sidenav-right md-whiteframe-z2" md-component-id="right" style="margin-top:64px;min-width:44%; overflow:hidden;">
+  <md-sidenav class="md-sidenav-right md-whiteframe-z2" md-component-id="right" style="margin-top:64px;min-width:65%; overflow:hidden;">
 
       <md-toolbar class="md-theme-light banner">
         <md-list>
           <md-list-item class="md-3-line">
 
         </md-list-item>
-        	<b style="margin-left:20px;">N° {{convenioSeleccionado.nro}}</b>
+        	<b style="margin-left:20px;">Acuerdo N° {{convenioSeleccionado.nro}}</b>
         	<b style="margin-left:20px;">{{convenioSeleccionado.nombre}}</b>
           <!--<md-button  ng-click="modResponsables()">Modificar</md-button>-->
         </md-list>
@@ -190,13 +195,15 @@
                     <thead>
                       <tr>
                         <th>Universidad</th>
+                        <th>Abreviación</th>
                         <th>In</th>
                         <th>Out</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr ng-repeat="responsable in convenioSeleccionado.responsables">
-                        <td data-title="Universidad">{{responsable.org_short_name}}</td>
+                        <td data-title="Universidad">{{responsable.org_original_name}}</td>
+                        <td data-title="Abreviacion">{{responsable.org_short_name}}</td>
                         <td data-title="In"><div ng-repeat="receiver in responsable.reception_student"> {{receiver.name}} <md-tooltip md-direction="left" >{{receiver.tel}} {{receiver.email}} </md-tooltip></div></td>
                         <td data-title="Out"><div ng-repeat="sender in responsable.sending_student"> {{sender.name}} <md-tooltip md-direction="left" >{{sender.tel}} 
                         {{sender.email}}</md-tooltip></div> </td>

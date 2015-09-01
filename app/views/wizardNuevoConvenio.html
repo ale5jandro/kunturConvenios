@@ -2,9 +2,9 @@
 <div style="display:flex; height:100%" ng-controller="KunturControllerChicos">
 <div style="position: absolute;left: 98%;top:4px;cursor:pointer;size:10px;" ng-click="cancelAgreement();"><i style="font-size:15px" class="material-icons">clear</i></div>
    <mt-wizard btn-progress-color="#D8D8D8" style="height:100%;display:flex;width:100%;" btn-bg-color="#FAFAFA" active-btn-bg-color="#E9E9E9" chevrons-always-visible="true" 
-   on-finish="submitAgreement()">
+   on-finish="submitAgreement()" principal-title="Asistente para la creación de nuevos acuerdos">
     
-    <mt-wz-step title="Nuevo Convenio" step-img="images/ic_settings_white_24px.svg"   on-exit="onExitStep1()" btn-bg-color="#00BCD4" active-btn-bg-color="#00BCD4">
+    <mt-wz-step title="Paso 1: Datos principales del acuerdo" step-img="images/ic_settings_white_24px.svg"   on-exit="onExitStep1()" btn-bg-color="#00BCD4" active-btn-bg-color="#00BCD4">
         <form name="formStep1"  novalidate layout="column" layout-sm="column" layout-align="start start">
         	<div layout-sm="column" style="height:100%;margin:auto;">
 
@@ -13,7 +13,7 @@
           		<tr>
           			<td style="width:50%">
 			           <md-input-container >
-			             <label>Nombre</label> <input ng-model="newAgreement.name"/>
+			             <label>Nombre</label> <input ng-model="newAgreement.name" required='true'/>
 			           </md-input-container>
 			        </td>
 		         </tr>
@@ -24,13 +24,13 @@
           		<tr>
           			<td style="width:50%">
 			           <md-input-container >
-			             <label>Fecha desde</label><input ng-model="newAgreement.from" type="text" label="desde" datepicker=""/>
+			             <label>Fecha desde</label><input ng-model="newAgreement.from" type="text" label="desde" datepicker="" required='true'/>
 			           </md-input-container>
 			        </td>
 			        <td style="width:50%">
 			           <md-input-container >
 			             <!-- <label>Fecha hasta</label><input ng-model="newAgreement.to" type="text"/> -->
-			             <label>Fecha hasta</label><input type="text"  ng-model="newAgreement.to" datepicker=""/>
+			             <label>Fecha hasta</label><input type="text"  ng-model="newAgreement.to" datepicker="" required='true'/>
 			             <!-- <time-date-picker ng-model="dateValue"></time-date-picker> -->
 			           </md-input-container>
 					 </td>
@@ -43,13 +43,13 @@
           		<tr>
           			<td style="width:50%">
 			           <md-input-container style="height:100%;">
-			            	<md-select style="height:100%;" placeholder="Tipo" ng-model="newAgreement.type"> 
+			            	<md-select style="height:100%;" placeholder="Tipo" ng-model="newAgreement.type" required='true'> 
 			            	<md-option ng-repeat="tipo in agreementsTypes" value="{{tipo.id}}">{{tipo.name}}</md-option></md-select>
 			           </md-input-container>
 			        </td>
 			        <td style="width:50%">
 			            <md-input-container style="height:100%;">
-			          		<md-select style="height:100%;" placeholder="Estado" ng-model="newAgreement.status">
+			          		<md-select style="height:100%;" placeholder="Estado" ng-model="newAgreement.status" required='true'>
 			          		<md-option ng-repeat="sta in estados" value="{{sta.id}}">{{sta.name}}</md-option> </md-select>
 			          	</md-input-container>
 			        </td>
@@ -59,7 +59,7 @@
            </div>
           </form>
     </mt-wz-step>
-    <mt-wz-step title="Universidades" step-img="images/ic_account_balance_white_24px.svg" style="display:flex;height:100%">
+    <mt-wz-step title="Paso 2: Asignación de universidades" step-img="images/ic_account_balance_white_24px.svg" style="display:flex;height:100%">
 
 	
    		<div layout="row" style="font-size: 1rem;display:flex;height:100%;width:100%"><!--margin-top:60px;-->
@@ -101,17 +101,28 @@
 		    <div layout="column" style="height:100%;z-index:30;" flex="100">
 				<div layout="column" ><!--style="height:100%"-->
 				   	<md-input-container layout="row">
-				      <div><label>Buscar</label>
+				   	  <md-button ng-click="toggleLeft()"
+		            	class="md-primary">
+		            	Filtrar universidad por país
+	          		  </md-button>
+				      <div><label>Buscar universidad</label>
 				      <input ng-model="newAgreement.UniversitySearch" ng-keypress="$root.onEnter($event, searchUniversity);"></div>
 		              <div style="padding-top: 15px;"><ng-md-icon icon="search" style="fill:#00BCD4" ng-click="searchUniversity()" size="30" ></ng-md-icon></div>
-					  <md-button ng-click="toggleLeft()"
-		            	class="md-primary">
-		            	Filtrar por Pais
-	          		  </md-button>
-	          		  <div ng-if="universitiesFilter.countryCode!=null" style="margin:auto;font-size:12pt;">Mostrando universidades de {{universitiesFilter.countryCode}}</div>
+	          		  <!-- <div ng-if="universitiesFilter.countryCode!=null" style="margin:auto;font-size:12pt;">Mostrando universidades de {{universitiesFilter.countryCode}}</div> -->
 				    </md-input-container>
+				    <div layout="row" layout-align="space-between center">
+					    <div ng-if="universitiesFilter.countryCode==null">
+					    Listado de universidades del mundo
+						</div>
+						<div ng-if="universitiesFilter.countryCode!=null">
+					    	Listado de universidades de {{universitiesFilter.countryCode}} <span style="font-size: 7pt;font-weight: 300;text-decoration: underline;cursor: pointer;" ng-click="removeFilters();" >(Quitar filtro)</span>
+						</div>
+						<div>
+							Universidades que has añadido a este convenio
+						</div>
+					</div>
 				</div>
-				<div layout="row" style="height:80%;">
+				<div layout="row" style="height:74%;">
 			    	<div flex="50" style="overflow:auto;border:1px solid;border-color: #C7C7C7;" id="universities" when-scroll-ends="loadUniversities()">
 			    		{{universities.name}}
 			    		<table id="table" class="table table-hover table-mc-light-blue fixed_headers" style="z-index:10;">
@@ -171,30 +182,39 @@
 
 
     </mt-wz-step>
-    <mt-wz-step title="Responsables" step-img="images/ic_person_white_24px.svg" style="height:100%;">
+    <mt-wz-step title="Paso 3: Asignación de responsables" step-img="images/ic_person_white_24px.svg" style="height:100%;">
     		<div layout="row" style="height:100%;">
 		    	<div style="overflow:auto;height:100%;margin:auto;" ng-if="newAgreement.universities != 0 ">
 		    		<table id="table" class="table table-hover table-mc-light-blue fixed_headers" >
 					    <thead>
 					        <tr>
+					         	<th data-title="País" style="color:#00BCD4">Institución</th>
+					         	<th data-title="País" style="color:#00BCD4">Institución Abreviación</th>
+					            <th data-title="País" style="color:#00BCD4">Página web</th>
 					            <th data-title="Universidad" style="color:#00BCD4" >Nombre</th>
-					            <th data-title="País" style="color:#00BCD4">Apellido</th>
-					            <th data-title="País" style="color:#00BCD4">Institucion</th>
+					            <th data-title="País" style="color:#00BCD4">Apellido</th>		           
 					            <th data-title="País" style="color:#00BCD4">In</th>
 					            <th data-title="País" style="color:#00BCD4">Out</th>
 					        </tr>
 					    </thead>
 					    <tbody id="universityBody">
-						    <tr ng-repeat="contact in newAgreement.Contacts track by $index" >
+						    <tr ng-repeat="contact in newAgreement.Contacts track by $index" ng-class="{'noContact': !contact.in && !contact.out}">
+						    	<td data-title="Universidad" ng-click="openUniversityInfo(university)">
+						            {{contact.org_original_name}}
+						        </td>
+						        <td data-title="Universidad" ng-click="openUniversityInfo(university)">
+						            {{contact.org_short_name}}
+						        </td>		
+						        <td data-title="Universidad" ng-click="openUniversityInfo(university)">
+						            {{contact.org_web_site}}
+						        </td>	
 						        <td data-title="Universidad" ng-click="openUniversityInfo(university)">
 						            {{contact.person_given_name}}
 						        </td>
 						        <td data-title="Universidad" ng-click="openUniversityInfo(university)">
 						            {{contact.person_family_name}}
-						        </td>
-						    	<td data-title="Universidad" ng-click="openUniversityInfo(university)">
-						            {{contact.org_short_name}}
-						        </td>						        <td>
+						        </td>			        
+						        <td>
 						        	<md-checkbox ng-model="contact.in" aria-label="Checkbox 1">
         							</md-checkbox>
         						</td>
@@ -224,8 +244,8 @@
 
 
     </mt-wz-step>
-    <mt-wz-step title="Unidades Académicas" step-img="images/ic_school_white_24px.svg" style="height:100%;">
-    		<div layout="row" style="height:100%;">
+    <mt-wz-step title="Paso 4: Asignación de unidades académicas" step-img="images/ic_school_white_24px.svg" style="height:100%;">
+    		<div layout="row" style="height:95%;">
 		    	<div flex="50" style="overflow:auto;"
 					  data-tree-id="arbol"
 					  data-angular-treeview="true" 
@@ -234,33 +254,39 @@
 				      data-node-label="original_name" 
 				      data-node-children="children">
 		    	</div>
-		    	<div flex="50" style="overflow:auto;">
-		    		<table id="table" class="table table-hover table-mc-light-blue fixed_headers" >
-					    <thead>
-					        <tr>
-					            <th data-title="Universidad" style="color:#00BCD4" >Unidad Académica</th>
-					            <th data-title="País" style="color:#00BCD4" >Sigla</th>
-					            <th data-title="País" style="color:#00BCD4">Quitar</th>
-					        </tr>
-					    </thead>
-					    <tbody id="universityBody" when-scroll-ends="loadUniversities()">
-						    <tr ng-repeat="org in newAgreement.selectedOrgs2Lvl track by $index" >
-						        <td data-title="Universidad" ng-click="openUniversityInfo(university)">
-						            {{org.original_name}}
-						        </td>
-						        <td data-title="Universidad" ng-click="openUniversityInfo(university)">
-						            {{org.short_name}}
-						        </td>
-						        <td><ng-md-icon icon="undo" style="fill:#00BCD4" size="30" ng-click="removeOrg2LvlFromAgreement(org)"></ng-md-icon></div></td>
-						    </tr>
-						</tbody>
-					</table>
+		    	<div style="width:100%;height:100%;overflow:auto;">
+		    		<div>
+			    		Unidades academicas que has añadido a este convenio
+			    	</div>
+			    	<div style="overflow:auto;border:1px solid;border-color: #C7C7C7;">
+
+			    		<table id="table" class="table table-hover table-mc-light-blue fixed_headers" >
+						    <thead>
+						        <tr>
+						            <th data-title="Universidad" style="color:#00BCD4" >Unidad Académica</th>
+						            <th data-title="País" style="color:#00BCD4" >Sigla</th>
+						            <th data-title="País" style="color:#00BCD4">Quitar</th>
+						        </tr>
+						    </thead>
+						    <tbody id="universityBody">
+							    <tr ng-repeat="org in newAgreement.selectedOrgs2Lvl track by $index" >
+							        <td data-title="Universidad" ng-click="openUniversityInfo(university)">
+							            {{org.original_name}}
+							        </td>
+							        <td data-title="Universidad" ng-click="openUniversityInfo(university)">
+							            {{org.short_name}}
+							        </td>
+							        <td><ng-md-icon icon="undo" style="fill:#00BCD4" size="30" ng-click="removeOrg2LvlFromAgreement(org)"></ng-md-icon></div></td>
+							    </tr>
+							</tbody>
+						</table>
+			    	</div>
 		    	</div>
 		    </div>
 
     </mt-wz-step>
 
-    <mt-wz-step title="Plazas" step-img="images/img_agreement.svg" style="height:100%;overflow:auto;">
+    <mt-wz-step title="Paso 5: Asignación de plazas" step-img="images/img_agreement.svg" style="height:100%;overflow:auto;">
 	    <div style="height:100%;" ng-if="newAgreement.selectedOrgs2Lvl.length != 0 && newAgreement.universities.length != 0">
 	        <table id="tableDataPlazas" class="tablaQSeVe table table-hover table-mc-light-blue">
 	            <thead>
@@ -271,26 +297,26 @@
 	                </tr>
 	            </thead>
 	            <tbody>
-	            <form name="plazasForm">
+	            <form name="plazasForm" id="plazasForm">
 	                <tr ng-repeat="(key, data) in newAgreement.universities">
 	                	<td>{{data.short_name}}</td>
 	                	<td>
 	                		<div layout="row">	
 								<md-input-container style="width:50px;"><input name="newAgreement.plazasInUNC{{$index}}" ng-model="newAgreement.plazasIn[data.id]['UNC']"
-								 onkeydown='allowNumericInputOnly(event)' style="text-align: center;">
+								 onkeydown='allowNumericInputOnly(event)' style="text-align: center;" class="inputPlazas inInput" required='true'>
 								</input></md-input-container> _ 
 								<md-input-container style="width:50px;"><input name="newAgreement.plazasInUNC{{$index}}" ng-model="newAgreement.plazasOut[data.id]['UNC']"
-								 onkeydown='allowNumericInputOnly(event)' style="text-align: center;">
+								 onkeydown='allowNumericInputOnly(event)' style="text-align: center;" class="inputPlazas outInput" required='true'>
 								</input></md-input-container>
 	                		</div>
 	                	</td>
 	                	<td ng-repeat="(key, data) in newAgreement.selectedOrgs2Lvl track by $index">
 	                		<div layout="row">
 							 	<md-input-container style="width:50px;"><input name="newAgreement.plazasIn{{$parent.$index}}{{$index}}" ng-model="newAgreement.plazasIn[$parent.data.id][data.id]" style="text-align: center;"
-							 	 onkeydown='allowNumericInputOnly(event)'>
+							 	 onkeydown='allowNumericInputOnly(event)' class="inputPlazas inInput" required='true'>
 							 	</input></md-input-container> _ 
 							 	<md-input-container style="width:50px;"><input name="newAgreement.plazasOut{{$parent.$index}}{{$index}}" ng-model="newAgreement.plazasOut[$parent.data.id][data.id]" style="text-align: center;"
-							 	 onkeydown='allowNumericInputOnly(event)'>
+							 	 onkeydown='allowNumericInputOnly(event)' class="inputPlazas outInput" required='true'> 
 							 	</input></md-input-container>
 							</div>
 	                	</td>
@@ -299,6 +325,7 @@
 	            </form>
 	            </tbody>
 	        </table>
+	        <div layout="row" style="font-size: smaller;">In <div style="height: 8px;width:8px;background-color:green;margin: 5px;"></div> Out <div style="height: 8px;width:8px;background-color:#C27ACE;margin: 5px;"></div></div>
 	    </div>
 	   	<div class="general-info-div" layout="column" layout-align="center center" style="overflow:auto;height:100%;width:100%;" 
 	   	ng-if="newAgreement.selectedOrgs2Lvl.length < 1 || newAgreement.universities.length < 1">
@@ -316,9 +343,18 @@
         </div>
 
     </mt-wz-step>
-   
+    <mt-wz-step title="Paso 6: Confirmacion" step-img="images/ic_done_white_24px.svg" style="height:100%;overflow:auto;">
+  		<div style="margin:auto;text-align: center;"><p>¿Esta seguro de crear el convenio {{newAgreement.name}} con {{newAgreement.universities.length}} universidades?<br>
+	  		
+			  Si esta seguro presione el boton verde para completar<br>
+			 Si quiere volver a un paso anterior presione el boton azul de la izquierda<br>
+			  Para salir sin guardar presione la x de la parte superior derecha</p>
+			
+		</div>
+  	</mt-wz-step>
 
   </mt-wizard>
+
 
 </div>
 </md-dialog>

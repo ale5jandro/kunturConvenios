@@ -196,6 +196,10 @@ inputDatePicker{
 	 opacity: 0.9;
 }
 
+.rowAgreement:hover{
+  cursor: pointer;
+}
+
 .agreementIcon{
 	opacity: 0;
 }
@@ -264,4 +268,17 @@ label{
 .universityDeleted{
   opacity: 0.58;
   text-decoration: line-through;
+}
+
+.noContact{
+  opacity: 0.58;
+  text-decoration: line-through;
+}
+
+.inInput{
+  border-color: green!important;
+}
+
+.outInput{
+  border-color: #C27ACE!important; 
 }

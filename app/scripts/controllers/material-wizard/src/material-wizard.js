@@ -35,6 +35,7 @@
           inactiveBtnBgColor: '@',
           btnProgressColor: '@',
           activeBtnProgressColor: '@',
+          principalTitle: '@',
           //Actions
           onFinish: '&'
 
@@ -48,6 +49,7 @@
           $scope.btnBgColor="#00BCD4";
           $scope.inactiveBtnBgColor="#00BCD4";
           $scope.activeBtnProgressColor="#C27ACE";
+          $scope.firstStep=true;
 
           this.addStep = function (stepScope) {
             steps.push(stepScope);
@@ -70,6 +72,11 @@
 
           //Central function to select a step. All must go through it
           $scope.goto = function (stepNr) {
+            if(stepNr==0){
+              $scope.firstStep=true;
+            }else{
+              $scope.firstStep=false;
+            }
             setStepActive(steps[$scope.selectedIndex], false);
             $scope.selectedIndex = stepNr;
             setStepActive(steps[stepNr], true);
@@ -96,7 +103,8 @@
           var template =
             '<div layout="column" class="md-whiteframe-z1" layout-padding style="height:92%;display:flex;width:100%;">' +//;height:100%
             ' <div layout="row"  layout-sm="column" layout-align="space-between start" layout-margin">' +
-            '  <div><h3>{{curentStepTitle}}</h3></div>' +
+            '  <div><h2 style="color: #00BCD4;">{{principalTitle}}<h2></div>' +
+
             '  <div layout="row" layout-align="end center" layout-margin>' +
             '  <div  ng-repeat="step in steps" layout="row" layout-align="center center"  ng-click="goto($index)" >' +
             '   <md-button class="md-fab  wizard-button" aria-label="step button"  >' +
@@ -110,9 +118,10 @@
             '</div>' +
             '<!--<md-divider ></md-divider>-->' +
             '<div layout="row"  class="wizard-container" ng-transclude style="height:77%;" ></div>' +//margin-top:90px;
-            '<div layout="row" layout-align="end center" style="">' +//padding-top:35%;
-            '  <md-button class="md-fab wizard-chevron-left" aria-label="previous" ng-click="previous()" id="leftButton" ng-show="selectedIndex > 0 "></md-button>' +
-            '  <md-button class="md-fab wizard-chevron-right" aria-label="next" ng-click="next()" id="rightButton"  ng-show="selectedIndex < steps.length -1"></md-button>' +
+            '<div layout="row" layout-align="space-between start" style="">' +//padding-top:35%;layout-align="end center"
+            '  <md-button class="md-fab wizard-chevron-left" aria-label="previous" ng-click="previous()" id="leftButton" ng-disabled="firstStep"></md-button>' +//ng-show="selectedIndex > 0 "
+            '  <h3>{{curentStepTitle}}</h3>'+
+            '  <md-button layout-align="center center" class="md-fab wizard-chevron-right" aria-label="next" ng-click="next()" id="rightButton"  ng-show="selectedIndex < steps.length -1"></md-button>' +
             '  <md-button class="md-fab wizard-finish" aria-label="finish" ng-click="onFinish()" id="okButton" ng-show="selectedIndex == steps.length -1"></md-button>' +
             ' </div>';
             '</div>';

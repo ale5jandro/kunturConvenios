@@ -101,7 +101,6 @@ angular
           })
           .error(function(err){
             console.log(err);
-            alert("Se rompio todo con el WS de agreements");
           });
       };
 
@@ -114,8 +113,8 @@ angular
           .success(function(data){
             callback(data);
           })
-          .error(function(){
-            alert("Se rompio todo con el WS de findAgreementById");
+          .error(function(err){
+            console.log(err);
           });
       };
 
@@ -124,8 +123,8 @@ angular
           .success(function(data){
             callback(data);
           })
-          .error(function(){
-            alert("Se rompio todo con el WS de agreements_types");
+          .error(function(err){
+            console.log(err);
           });
 
       };
@@ -135,8 +134,8 @@ angular
           .success(function(data){
             callback(data);
           })
-          .error(function(){
-            alert("Se rompio todo con el WS de organizations");
+          .error(function(err){
+            console.log(err);
           });
 
       };
@@ -146,32 +145,11 @@ angular
           .success(function(data){
             callback(data);
           })
-          .error(function(){
-            alert("Se rompio todo con el WS de status");
+          .error(function(err){
+            console.log(err);
           });
 
       };
-
-      // dataFactory.setAgreement=function(id, erased, code, name, from_date, to_date, comment, agreement_type_id, org_id){
-      //     $http({
-      //       method:"post",
-      //       url: urlKuntur + 'insertarAgreement',
-      //       data:{
-      //         erased:erased,
-      //         code:code,
-      //         name:name,
-      //         from_date:from_date,
-      //         to_date:to_date,
-      //         comment:comment,
-      //         agreement_type_id:agreement_type_id,
-      //         org_id:org_id
-      //       }
-      //     })
-      //     .error(function(){
-      //       alert("no iserto");
-      //     });
-    
-      // };
 
       dataFactory.loadStatusPromise=function(){
         return $http.get(urlKuntur + '/getStatus');
@@ -194,7 +172,7 @@ angular
             callback(data);
           })
           .error(function(err){
-            alert(err);
+            console.log(err);
           });
       }
 
@@ -209,20 +187,12 @@ angular
             // console.log(data);
             callback(data);
           })
-          .error(function(){
-            alert("Se rompio todo con el WS de conveniosXOrga");
+          .error(function(err){
+            console.log(err);
           });
       }
 
       dataFactory.getResponsableXOrgs=function(callback, orgs){
-        //console.log("llmado");
-        //console.log(orgs);
-        // var aux="";
-        // for(var i=0;i<orgs.length;i++){
-        //   aux+="orgs="+orgs[i];
-        //   if(i!=orgs.length-1)
-        //     aux+="&";
-        // }
         $http({
             method:"post",
             url: urlKuntur + 'listResponsablesByOrgs',
@@ -234,16 +204,9 @@ angular
           // console.log(data);
           callback(data);
         })
-        .error(function(){
-          alert("Se rompio todo con el WS de getResponsableXOrgs");
+        .error(function(err){
+          console.log(err);
         });
-       /* $http.get(urlKuntur + 'listResponsablesByOrgs/'+aux)
-          .success(function(data){
-            callback(data);
-          })
-          .error(function(){
-            alert("Se rompio todo con el WS de getResponsableXOrgs");
-          });*/
       }
 
 
@@ -256,8 +219,8 @@ angular
           .success(function(data){
             callback(data);
           })
-          .error(function(){
-            alert("Se rompio todo con el WS de getResponsableXOrgXConvenio");
+          .error(function(err){
+            console.log(err);
           });
       }
 
@@ -271,8 +234,8 @@ angular
           .success(function(data){
             callback();
           })
-          .error(function(mes){
-            alert(mes);
+          .error(function(err){
+            console.log(err);
           });
       }
 
@@ -286,8 +249,8 @@ angular
             .success(function(data){
               callback();
             })
-            .error(function(){
-              alert("Se rompio todo con el WS de deleteAgr");
+            .error(function(err){
+              console.log(err);
             });
         }else{
           $http.get(urlKuntur + 'reinsertAgreement',{
@@ -298,8 +261,8 @@ angular
             .success(function(data){
               callback();
             })
-            .error(function(){
-              alert("Se rompio todo con el WS de deleteAgr");
+            .error(function(err){
+              console.log(err);
           });
         }
       }
@@ -309,8 +272,8 @@ angular
           .success(function(data){
             callback(data);
           })
-          .error(function(){
-            alert("Se rompio todo con el WS de orgs2lvl");
+          .error(function(err){
+            console.log(err);
           });
       }
 
@@ -324,9 +287,8 @@ angular
         })
           .success(function(data){
           })
-          .error(function(message){
-            alert(message);
-            console.log(message);
+          .error(function(err){
+            console.log(err);
           });
       }
 
@@ -340,9 +302,8 @@ angular
         })
           .success(function(data){
           })
-          .error(function(message){
-            alert(message);
-            console.log(message);
+          .error(function(err){
+            console.log(err);
           });
       }
 
@@ -355,8 +316,8 @@ angular
           .success(function(data){
             callback(data);
           })
-          .error(function(){
-            alert("Se rompio todo con el WS de getSelectedOrgs");
+          .error(function(err){
+            console.log(err);
           });
       }
 

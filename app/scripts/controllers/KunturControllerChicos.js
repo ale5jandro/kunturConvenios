@@ -3,7 +3,7 @@
   angular
        .module('kunturApp')
        .controller('KunturControllerChicos', [
-          '$scope','$mdDialog', 'dataFactory', '$mdSidenav', '$mdBottomSheet', '$log', '$q', '$mdUtil', '$mdToast',
+          '$scope','$mdDialog', 'dataFactory', '$mdSidenav', '$mdBottomSheet', '$log', '$q', '$mdUtil', '$mdToast', '$filter',
           KunturController
        ])
 
@@ -16,7 +16,7 @@
    * @param avatarsService
    * @constructor
    */
-  function KunturController( $scope, $mdDialog, dataFactory,$mdSidenav, $mdBottomSheet, $log, $q, $mdUtil, $mdToast) {
+  function KunturController( $scope, $mdDialog, dataFactory,$mdSidenav, $mdBottomSheet, $log, $q, $mdUtil, $mdToast, $filter) {
     var self = this;
 
     function toggleUsersList() {
@@ -148,6 +148,7 @@
 
     var loadContacts=function(data){
       $scope.newAgreement.Contacts=JSON.parse(data[0].f_responsablesbyorg);
+      $scope.newAgreement.Contacts=$filter('orderBy')($scope.newAgreement.Contacts, 'org_original_name', true);
     }
 
 
@@ -239,28 +240,56 @@
         }
         agreement.agreementItem.push(agreementItem)
       }
+
+    var inputs = $('.inputPlazas');
+    var errorInputs=false;
+    for(i in inputs){
+      if($('.inputPlazas')[i].value==""){
+        errorInputs=true;
+      }
+    }
   
     if($scope.newAgreement.name=="" || $scope.newAgreement.from=="" || $scope.newAgreement.to=="" || $scope.newAgreement.type=="" || $scope.newAgreement.status==""){
       //alert("Faltan datos por completar");
         var toast = $mdToast.simple()
-              .content('Faltan datos por completar')
-              .position('bottom left')
-              .hideDelay(4000);
+          .content('Faltan datos por completar')
+          .position('bottom left')
+          .hideDelay(4000);
         $mdToast.show(toast);
     }
-    else{
+    else if(agreement.from>agreement.to){
+      var toast = $mdToast.simple()
+        .content('Fechas Invalidas')
+        .position('bottom left')
+        .hideDelay(4000);
+      $mdToast.show(toast);
+    }else if(inputs.length<1){
+      var toast = $mdToast.simple()
+        .content('No hay plazas seleccionadas')
+        .position('bottom left')
+        .hideDelay(4000);
+      $mdToast.show(toast);
+    }else if(errorInputs){
+      var toast = $mdToast.simple()
+        .content('Completar campos de plazas')
+        .position('bottom left')
+        .hideDelay(4000);
+      $mdToast.show(toast);
+    }else{
+          var confirm = $mdDialog.confirm()
+              .title('Would you like to delete your debt?')
+              .content('All of the banks have agreed to forgive you your debts.')
+              .ariaLabel('Lucky day')
+              .ok('Please do it!')
+              .cancel('Sounds like a scam');
+        $mdDialog.show(confirm).then(function() {
+          dataFactory.setAgreement(agreement,succesAgreement);
+        }, function() {
+          $scope.status = 'You decided to keep your debt.';
+        });
+        
+    }
 
-      if(agreement.from>agreement.to){
-        var toast = $mdToast.simple()
-              .content('Fechas Invalidas')
-              .position('bottom left')
-              .hideDelay(4000);
-        $mdToast.show(toast);
-      }else{
-        dataFactory.setAgreement(agreement,succesAgreement);
-      }
-    }
-    
     }
 
     var succesAgreement=function(id){

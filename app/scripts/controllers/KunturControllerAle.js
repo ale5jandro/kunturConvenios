@@ -294,8 +294,9 @@
         var row = {};
         var i=0;
         for(;i<data.length;i++){
-            if((i>0)&&(data[i-1].org_short_name!=data[i].org_short_name)){
+            if((i>0)&&(data[i-1].org_original_name!=data[i].org_original_name)){
               row = {};
+              row.org_original_name=data[i-1].org_original_name;
               row.org_short_name=data[i-1].org_short_name;
               row.reception_student=recepcion;
               row.sending_student=envio;
@@ -322,6 +323,7 @@
          // }
         }
         row = {};
+        row.org_original_name=data[i-1].org_original_name;
         row.org_short_name=data[i-1].org_short_name;
         row.reception_student=recepcion;
         row.sending_student=envio;
@@ -506,6 +508,8 @@
         }
         //$scope.newAgreement.Contacts=JSON.parse(data[0].f_responsablesbyorg);
       }
+      
+      $scope.newAgreement.Contacts=$filter('orderBy')($scope.newAgreement.Contacts, 'org_original_name', true);
     }
 
     $scope.selectContact=function(con){
@@ -580,6 +584,8 @@
             contactAux.out=true;
           }
           contactAux.org_short_name=agreement.agreementItem[ai].contacts[c].short_name;
+          contactAux.org_original_name=agreement.agreementItem[ai].contacts[c].original_name;
+          contactAux.org_web_site=agreement.agreementItem[ai].contacts[c].web_site;
           contactAux.org_id=agreement.agreementItem[ai].contacts[c].org_id;
           contactAux.person_given_name=agreement.agreementItem[ai].contacts[c].given_name;
           contactAux.person_middle_name=agreement.agreementItem[ai].contacts[c].middle_name;
@@ -641,30 +647,49 @@
     agreement.agreement_type_id=$scope.newAgreement.agreement_type_id;
     agreement.agreement_status_id=$scope.newAgreement.agreement_status_id;
 
+
+    var inputs = $('.inputPlazas');
+    var errorInputs=false;
+    for(i in inputs){
+      if($('.inputPlazas')[i].value==""){
+        errorInputs=true;
+      }
+    }
+
     if($scope.newAgreement.title=="" || $scope.newAgreement.from=="" || $scope.newAgreement.to=="" || $scope.newAgreement.type=="" || $scope.newAgreement.status==""){
       // alert("Faltan datos por completar");
-
       var toast = $mdToast.simple()
         .content('Faltan datos por completar')
         .position('bottom left')
         .hideDelay(4000);
       $mdToast.show(toast);
-
-
-    }else{
+    }else if(agreement.from_date>agreement.to_date){
       // dataFactory.updateAgreement(agr);
-      if(agreement.from_date>agreement.to_date){
-        var toast = $mdToast.simple()
-              .content('Fechas Invalidas')
-              .position('bottom left')
-              .hideDelay(4000);
-        $mdToast.show(toast);
-      }else{
+      var toast = $mdToast.simple()
+        .content('Fechas Invalidas')
+        .position('bottom left')
+        .hideDelay(4000);
+      $mdToast.show(toast);
+    }else if(inputs.length<1){
+      var toast = $mdToast.simple()
+        .content('No hay plazas seleccionadas')
+        .position('bottom left')
+        .hideDelay(4000);
+      $mdToast.show(toast);
+    }else if(errorInputs){
+      var toast = $mdToast.simple()
+        .content('Completar campos de plazas')
+        .position('bottom left')
+        .hideDelay(4000);
+      $mdToast.show(toast);
+    }else{
         dataFactory.updateAgreementData(agreement,succesAgreement);
         $mdDialog.hide([id]);
-      }
-
     }
+
+
+
+
     }
 
     var succesAgreement=function(id){
