@@ -613,8 +613,16 @@
         for(aio in agreement.agreementItem[ai].agreementItemOu){
           if(ai==0)
             $scope.newAgreement.selectedOrgs2Lvl.push(agreement.agreementItem[ai].agreementItemOu[aio]);
-          $scope.newAgreement.plazasIn[agreement.agreementItem[ai].org_id][agreement.agreementItem[ai].agreementItemOu[aio].org_id]=agreement.agreementItem[ai].agreementItemOu[aio].in_units;
-          $scope.newAgreement.plazasOut[agreement.agreementItem[ai].org_id][agreement.agreementItem[ai].agreementItemOu[aio].org_id]=agreement.agreementItem[ai].agreementItemOu[aio].out_units;
+          if(agreement.agreementItem[ai].agreementItemOu[aio].in_units==null){
+            $scope.newAgreement.plazasIn[agreement.agreementItem[ai].org_id][agreement.agreementItem[ai].agreementItemOu[aio].org_id]='*';
+          }else{
+            $scope.newAgreement.plazasIn[agreement.agreementItem[ai].org_id][agreement.agreementItem[ai].agreementItemOu[aio].org_id]=agreement.agreementItem[ai].agreementItemOu[aio].in_units;
+          }
+          if(agreement.agreementItem[ai].agreementItemOu[aio].out_units==null){
+            $scope.newAgreement.plazasOut[agreement.agreementItem[ai].org_id][agreement.agreementItem[ai].agreementItemOu[aio].org_id]='*';
+          }else{
+            $scope.newAgreement.plazasOut[agreement.agreementItem[ai].org_id][agreement.agreementItem[ai].agreementItemOu[aio].org_id]=agreement.agreementItem[ai].agreementItemOu[aio].out_units;
+          }
           //console.log($scope.newAgreement.plazasIn);
         }
         $scope.newAgreement.plazasIn[agreement.agreementItem[ai].org_id]['UNC']=agreement.agreementItem[ai].in_units;

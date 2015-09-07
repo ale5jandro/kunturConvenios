@@ -306,10 +306,10 @@
 	                	<td ng-repeat="(key, data) in newAgreement.selectedOrgs2Lvl track by $index">
 	                		<div layout="row">
 							 	<md-input-container style="width:50px;"><input name="newAgreement.plazasIn{{$parent.$index}}{{$index}}" ng-model="newAgreement.plazasIn[$parent.data.id][data.org_id]" style="text-align: center;" class="inputPlazas inInput"
-							 	onkeydown='allowNumericInputOnly(event)' aria-label="1">
+							 	onkeydown='allowNumericStarInputOnly(event)' aria-label="1">
 							 	</input></md-input-container> _
 							 	<md-input-container style="width:50px;"><input name="newAgreement.plazasOut{{$parent.$index}}{{$index}}" ng-model="newAgreement.plazasOut[$parent.data.id][data.org_id]" style="text-align: center;" class="inputPlazas outInput"
-							 	 onkeydown='allowNumericInputOnly(event)' aria-label="1">
+							 	 onkeydown='allowNumericStarInputOnly(event)' aria-label="1">
 							 	</input></md-input-container>
 							</div>
 	                	</td>

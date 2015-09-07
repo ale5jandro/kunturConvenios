@@ -314,10 +314,10 @@
 	                	<td ng-repeat="(key, data) in newAgreement.selectedOrgs2Lvl track by $index">
 	                		<div layout="row">
 							 	<md-input-container style="width:50px;"><input name="newAgreement.plazasIn{{$parent.$index}}{{$index}}" ng-model="newAgreement.plazasIn[$parent.data.id][data.id]" style="text-align: center;"
-							 	 onkeydown='allowNumericInputOnly(event)' class="inputPlazas inInput" required='true' aria-label="1">
+							 	 onkeydown='allowNumericStarInputOnly(event)' class="inputPlazas inInput" required='true' aria-label="1">
 							 	</input></md-input-container> _ 
 							 	<md-input-container style="width:50px;"><input name="newAgreement.plazasOut{{$parent.$index}}{{$index}}" ng-model="newAgreement.plazasOut[$parent.data.id][data.id]" style="text-align: center;"
-							 	 onkeydown='allowNumericInputOnly(event)' class="inputPlazas outInput" required='true' aria-label="1"> 
+							 	 onkeydown='allowNumericStarInputOnly(event)' class="inputPlazas outInput" required='true' aria-label="1"> 
 							 	</input></md-input-container>
 							</div>
 	                	</td>
