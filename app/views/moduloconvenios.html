@@ -6,7 +6,7 @@
       	<div style="width: 54px;margin-right: 2px;">
       		<img style="width: 54px;margin-right: 2px;max-width: 54px;" src="images/kuntur_blanco.png"></img>
       	</div>
-        <div style="width: 100%;">
+        <div style="width: 100%;cursor: pointer;padding-left: 5px;" ng-click="resetSearch()">
           Gestión de acuerdos
         </div>
       <md-button class="menu" hide-gt-sm ng-click="ul.toggleList()" aria-label="Mostrar Universidades">
@@ -87,7 +87,7 @@
       <md-icon md-svg-icon="images/add.svg" style="fill:white; margin-left:-4px"></md-icon>
       <md-icon md-svg-icon="images/img_agreement.svg" style="fill: white;margin-left: -8px;"></md-icon>
       <md-tooltip md-direction="left" >
-        Agregar Convenio
+        Agregar acuerdo
       </md-tooltip>
     </md-button>
 
@@ -110,10 +110,10 @@
             </tr>
           </thead>
           <tbody style="font-weight: 400;">
-            <tr ng-repeat="university in universities" ng-click="toggleRight();getAgreementData(university);" class="rowAgreement" ng-class="{'universityDeleted': university.erased}">
-            	<td data-title="Numero">{{university.number_agreement}}</td>
+            <tr ng-repeat="university in universities" ng-click="toggleRight();getAgreementData(university);" class="rowAgreement" ng-class="{'intouchableAgreement': university.convenios>=1}">
+            	<td data-title="Número">{{university.number_agreement}}</td>
               <!-- <td data-title="Titulo"><a href="#" onaftersave="updateAgreement(university)" editable-text="university.title" ng-click="$event.stopPropagation();">{{university.title}}</a></td> -->
-              <td data-title="Titulo">{{university.title}}</td>
+              <td data-title="Título">{{university.title}}</td>
              <!--  <td data-title="Tipo"><a href="#" onaftersave="updateAgreement(university)" editable-select="university.agreement_type_id" onshow="loadTypes()" ng-click="$event.stopPropagation();" 
               e-ng-options="g.id as g.name for g in typesAvaibles">{{university.agreement_type_name}}</a></td> -->
          <!--      <td data-title="Tipo">{{university.agreement_type_name}}</td>
@@ -132,9 +132,9 @@
                 <md-icon class="agreementIcon" md-font-library="material-icons" style="margin-right:4px" ng-click="$event.stopPropagation();modResponsables($event,university)">edit</md-icon>
                 <md-icon class="agreementIcon" md-font-library="material-icons" style="margin-right:-12px" ng-click="$event.stopPropagation();deleteAgreement(university)">delete</md-icon>
               </td>
-              <td ng-if='university.erased'>
-                <md-icon class="agreementIcon" md-font-library="material-icons" style="margin-left:17px;font-size: 19pt;" ng-click="$event.stopPropagation();reinsertAgreement(university)">undo</md-icon>
+              <td ng-if='university.convenios>=1'>
               </td>
+      
             </tr>
           </tbody>
         </table>
@@ -168,8 +168,8 @@
         <md-tab label="Plazas" style="height:100%;overflow:auto;">
           <md-content class="md-padding md-back-theme flex-container" style="height:100%;">
 
-              <div class="palabrasCabeceraConvenio" ng-if="convenioSeleccionado.cantidad>1">{{convenioSeleccionado.tipo}} entre Universidad Nacional de Cordoba (UNC) y las siguientes {{convenioSeleccionado.cantidad}} universidades:</div>
-              <div class="palabrasCabeceraConvenio" ng-if="convenioSeleccionado.cantidad==1">{{convenioSeleccionado.tipo}} entre Universidad Nacional de Cordoba (UNC) y la siguiente universidad:</div>
+              <div class="palabrasCabeceraConvenio" ng-if="convenioSeleccionado.cantidad>1">{{convenioSeleccionado.tipo}} entre Universidad Nacional de Córdoba (UNC) y las siguientes {{convenioSeleccionado.cantidad}} universidades:</div>
+              <div class="palabrasCabeceraConvenio" ng-if="convenioSeleccionado.cantidad==1">{{convenioSeleccionado.tipo}} entre Universidad Nacional de Córdoba (UNC) y la siguiente universidad:</div>
           
              <table id="tableDataPlazas" class="tablaQSeVe table table-hover table-mc-light-blue" style="height:100%;">
                     <thead>
@@ -195,7 +195,7 @@
                     <thead>
                       <tr>
                         <th>Universidad</th>
-                        <th>Abreviación</th>
+                        <th>Sigla</th>
                         <th>In</th>
                         <th>Out</th>
                       </tr>
@@ -204,8 +204,8 @@
                       <tr ng-repeat="responsable in convenioSeleccionado.responsables">
                         <td data-title="Universidad">{{responsable.org_original_name}}</td>
                         <td data-title="Abreviacion">{{responsable.org_short_name}}</td>
-                        <td data-title="In"><div ng-repeat="receiver in responsable.reception_student"> {{receiver.name}} <md-tooltip md-direction="left" >{{receiver.tel}} {{receiver.email}} </md-tooltip></div></td>
-                        <td data-title="Out"><div ng-repeat="sender in responsable.sending_student"> {{sender.name}} <md-tooltip md-direction="left" >{{sender.tel}} 
+                        <td data-title="In"><div ng-repeat="receiver in responsable.reception_student"> {{receiver.name}} <md-tooltip md-direction="left" >{{receiver.tel}} | {{receiver.email}} </md-tooltip></div></td>
+                        <td data-title="Out"><div ng-repeat="sender in responsable.sending_student"> {{sender.name}} <md-tooltip md-direction="left" >{{sender.tel}} |
                         {{sender.email}}</md-tooltip></div> </td>
                       </tr>
                     </tbody>

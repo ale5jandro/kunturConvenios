@@ -9,7 +9,7 @@
  * Main module of the application.
  */
 angular
-    .module('kunturApp', ['ngRoute','ngAnimate','ngMaterial', 'users','ngMdIcons','material.wizard','xeditable', 'angularTreeview', 'datetime'])//'ngMap',, 'ui.bootstrap'
+    .module('kunturApp', ['ngRoute','ngAnimate','ngMaterial', 'users','ngMdIcons','material.wizard', 'angularTreeview', 'datetime'])//'ngMap',, 'ui.bootstrap'
 
 .config(function ($routeProvider) {
     $routeProvider
@@ -83,7 +83,7 @@ angular
 
       dataFactory.getAgreements=function(callback, filtrosAgreement, page){
           
-          console.log(page);
+          // console.log(page);
           var pageSize = 30;
           if(page)
             var offset = page * pageSize;

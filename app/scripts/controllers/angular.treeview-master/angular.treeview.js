@@ -53,12 +53,12 @@
 							'<i class="collapsed" data-ng-show="node.' + nodeChildren + '.length && node.collapsed" data-ng-click="' + treeId + '.selectNodeHead(node)"></i>' +
 							'<i class="expanded" data-ng-show="node.' + nodeChildren + '.length && !node.collapsed" data-ng-click="' + treeId + '.selectNodeHead(node)"></i>' +
 							'<i class="normal" data-ng-hide="node.' + nodeChildren + '.length"></i> ' +
-							'<span data-ng-class="node.selected" data-ng-click="' + treeId + '.selectNodeLabel(node)">{{node.' + nodeLabel + '}}</span><ng-md-icon icon="add" ng-if="node.primary_org==false" style="fill:#00BCD4" size="15" ng-click="addChildrenOrg(node);"></ng-md-icon>' +
+							'<span data-ng-class="node.selected" data-ng-click="' + treeId + '.selectNodeLabel(node)">{{node.' + nodeLabel + '}}</span><ng-md-icon icon="add" ng-if="node.primary_org==false" style="fill:#00BCD4;cursor:pointer;" size="15" ng-click="addChildrenOrg(node);"></ng-md-icon>' +
 							'<div data-ng-hide="node.collapsed" data-tree-id="' + treeId + '" data-tree-model="node.' + nodeChildren + '" data-node-id=' + nodeId + ' data-node-label=' + nodeLabel + ' data-node-children=' + nodeChildren + '></div>' +
 						'</li>' +
 					'</ul>';
 
-				console.log(treeId);	
+				// console.log(treeId);	
 
 				//check tree id, tree model
 				if( treeId && treeModel ) {

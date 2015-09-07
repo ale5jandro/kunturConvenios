@@ -73,10 +73,11 @@
     $scope.newAgreement.to="";
     $scope.newAgreement.name="";
     $scope.newAgreement.code="";
+    $scope.wizardIndice=null;
     
 
     $scope.addChildrenOrg = function(org){
-      // console.log(org);
+      // //console.log(org);
       if($scope.newAgreement.selectedOrgs2Lvl.indexOf(org)==-1)
         $scope.newAgreement.selectedOrgs2Lvl.push(org);
     }
@@ -86,9 +87,9 @@
       var agreementItem = {};
       var agreement = {};
         var agreementItemOu = {};
-        console.log("pasa");
+        //console.log("pasa");
         for(var fac in $scope.newAgreement.plazasIn[0]){
-          console.log("pasa2");
+          //console.log("pasa2");
           agreementItemOu.fac=fac;
           agreementItemOu.in=$scope.newAgreement.plazasIn[fac];
           agreementItemOu.out=$scope.newAgreement.plazasOut[fac];
@@ -133,7 +134,7 @@
 
     var page = 0;
     $scope.loadUniversities = function(){
-      console.log(page);
+      //console.log(page);
       page += 1;
       dataFactory.getUniversities(function(universities){
         $scope.universities = $scope.universities.concat(universities);
@@ -154,7 +155,7 @@
 
     $scope.removeContryToAgreement=function(university){
       $scope.newAgreement.universities.splice($scope.newAgreement.universities.indexOf(university),1); 
-      console.log(university);
+      //console.log(university);
       $scope.newAgreement.Contacts=$scope.newAgreement.Contacts.filter( function(item) {
         return !(university.id == item.org_id);
       } );
@@ -171,11 +172,13 @@
       dataFactory.getUniversities(getUniversities,$scope.universitiesFilter);
     }
 
-    $scope.searchUniversityCountry=function(code){
+    $scope.searchUniversityCountry=function(code, name, flag){
       $('#universities').scrollTop(0);
       page=0;
       $scope.universities=[];
       $scope.universitiesFilter.countryCode=code;
+      $scope.universitiesFilter.name=name;
+      $scope.universitiesFilter.flag=flag;
       dataFactory.getUniversities(getUniversities,$scope.universitiesFilter);
     }
 
@@ -189,7 +192,7 @@
     }
 
     $scope.selectContactIn=function(contact){
-      console.log(contact);
+      //console.log(contact);
       if($scope.newAgreement.selectedContactsIn.indexOf(contact)==-1)
         $scope.newAgreement.selectedContactsIn.push(contact);
     }
@@ -252,14 +255,14 @@
     if($scope.newAgreement.name=="" || $scope.newAgreement.from=="" || $scope.newAgreement.to=="" || $scope.newAgreement.type=="" || $scope.newAgreement.status==""){
       //alert("Faltan datos por completar");
         var toast = $mdToast.simple()
-          .content('Faltan datos por completar')
+          .content('Faltan datos por completar en el paso 1')
           .position('bottom left')
           .hideDelay(4000);
         $mdToast.show(toast);
     }
     else if(agreement.from>agreement.to){
       var toast = $mdToast.simple()
-        .content('Fechas Invalidas')
+        .content('Fechas inválidas')
         .position('bottom left')
         .hideDelay(4000);
       $mdToast.show(toast);
@@ -276,17 +279,7 @@
         .hideDelay(4000);
       $mdToast.show(toast);
     }else{
-          var confirm = $mdDialog.confirm()
-              .title('Would you like to delete your debt?')
-              .content('All of the banks have agreed to forgive you your debts.')
-              .ariaLabel('Lucky day')
-              .ok('Please do it!')
-              .cancel('Sounds like a scam');
-        $mdDialog.show(confirm).then(function() {
-          dataFactory.setAgreement(agreement,succesAgreement);
-        }, function() {
-          $scope.status = 'You decided to keep your debt.';
-        });
+      dataFactory.setAgreement(agreement,succesAgreement);
         
     }
 
@@ -355,7 +348,7 @@
           
         })
         .error(function (error){
-          console.log("Unable to load continents data." + error.message);
+          //console.log("Unable to load continents data." + error.message);
         });
     }
 
@@ -368,7 +361,7 @@
           $scope.continents.forEach(getCountriesFromContinent);
         })
         .error(function (error){
-          console.log("Unable to load continents data." + error.message);
+          //console.log("Unable to load continents data." + error.message);
         });
     }
 
@@ -384,7 +377,7 @@
           });
         })
         .error(function (error){
-          console.log("Unable to load Countries data." + error.message);
+          //console.log("Unable to load Countries data." + error.message);
         });
     }
 
@@ -418,7 +411,7 @@
       return $('.minimized li a').on('click', function() {
         var children, obj, toggle;
         obj = $(this);
-        console.log($(this));
+        //console.log($(this));
         if (obj.attr('href') === '#') {
           children = obj.parent().children('ul');
           toggle = obj.find('.toggle');
@@ -445,7 +438,7 @@ function buildToggler(navID) {
         $mdSidenav(navID)
           .toggle()
           .then(function() {
-            $log.debug("toggle " + navID + " is done");
+            // $log.debug("toggle " + navID + " is done");
           });
       }, 10);
 

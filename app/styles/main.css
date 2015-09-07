@@ -272,7 +272,6 @@ label{
 
 .noContact{
   opacity: 0.58;
-  text-decoration: line-through;
 }
 
 .inInput{
@@ -281,4 +280,12 @@ label{
 
 .outInput{
   border-color: #C27ACE!important; 
+}
+
+.intouchableAgreement{
+  color:#00BCD4;
+}
+
+.yesContact{
+  color: green;
 }

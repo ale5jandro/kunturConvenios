@@ -28,12 +28,14 @@ div[data-tree-model] li {
 }
 
 div[data-tree-model] li .expanded {
+  cursor: pointer;
   padding: 1px 10px;
   background-image: url("../images/chevron-down.png");
   background-repeat: no-repeat;
 }
 
 div[data-tree-model] li .collapsed {
+  cursor: pointer;
   padding: 1px 10px;
   background-image: url("../images/chevron-right.png");
   background-repeat: no-repeat;
@@ -45,7 +47,7 @@ div[data-tree-model] li .normal {
 }
 
 div[data-tree-model] li i, div[data-tree-model] li span {
-  cursor: pointer;
+  cursor: default;
 }
 
 div[data-tree-model] li .selected {

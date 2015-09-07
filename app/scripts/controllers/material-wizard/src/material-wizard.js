@@ -37,7 +37,8 @@
           activeBtnProgressColor: '@',
           principalTitle: '@',
           //Actions
-          onFinish: '&'
+          onFinish: '&',
+          index: '='
 
         },
         restrict: 'E',
@@ -72,6 +73,7 @@
 
           //Central function to select a step. All must go through it
           $scope.goto = function (stepNr) {
+            $scope.index=stepNr;
             if(stepNr==0){
               $scope.firstStep=true;
             }else{
@@ -119,10 +121,10 @@
             '<!--<md-divider ></md-divider>-->' +
             '<div layout="row"  class="wizard-container" ng-transclude style="height:77%;" ></div>' +//margin-top:90px;
             '<div layout="row" layout-align="space-between start" style="">' +//padding-top:35%;layout-align="end center"
-            '  <md-button class="md-fab wizard-chevron-left" aria-label="previous" ng-click="previous()" id="leftButton" ng-disabled="firstStep"></md-button>' +//ng-show="selectedIndex > 0 "
-            '  <h3>{{curentStepTitle}}</h3>'+
-            '  <md-button layout-align="center center" class="md-fab wizard-chevron-right" aria-label="next" ng-click="next()" id="rightButton"  ng-show="selectedIndex < steps.length -1"></md-button>' +
-            '  <md-button class="md-fab wizard-finish" aria-label="finish" ng-click="onFinish()" id="okButton" ng-show="selectedIndex == steps.length -1"></md-button>' +
+            '  <md-button style="margin-left:15px;" class="md-fab wizard-chevron-left" aria-label="previous" ng-click="previous()" id="leftButton" ng-disabled="firstStep"></md-button>' +//ng-show="selectedIndex > 0 "
+            '  <h3 style="margin-top:33px;">{{curentStepTitle}}</h3>'+
+            '  <md-button layout-align="center center" class="md-fab wizard-chevron-right" aria-label="next" ng-click="next()" id="rightButton"  ng-if="selectedIndex < steps.length -1"></md-button>' +
+            '  <md-button class="md-fab wizard-finish" aria-label="finish" ng-click="onFinish()" id="okButton" ng-if="selectedIndex == steps.length -1"></md-button>' +
             ' </div>';
             '</div>';
           return template;

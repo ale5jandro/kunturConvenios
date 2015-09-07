@@ -120,16 +120,21 @@
 
     $rootScope.onEnter = function(e, funcion){
       if(e.keyCode==13){//enter
-        console.log("enter");
+        //console.log("enter");
         funcion();
       }
+    }
+
+    $scope.resetSearch = function(){
+      var filter={};
+      dataFactory.getAgreements(cargarUniversidades, $scope.agreementFilter);
     }
 
     var pageAgreement = 0;
     $scope.loadAgreements = function(){
       pageAgreement += 1;
       dataFactory.getAgreements(function(universities){
-        console.log(universities);
+        //console.log(universities);
         $scope.universities = $scope.universities.concat(universities);
       },$scope.agreementFilter, pageAgreement);
     };
@@ -231,8 +236,8 @@
     $scope.deleteAgreement = function(convenio){
 
       var confirm = $mdDialog.confirm()
-        .title('¿Esta seguro de borrar el convenio '+convenio.title+'?')
-        .content('El convenio se borrara definitivamente y no podra ser recuperado.')
+        .title('¿Esta seguro de borrar el acuerdo '+convenio.title+'?')
+        .content('El acuerdo se borrará definitivamente y no podrá ser recuperado.')
         .ariaLabel('Borrar')
         .ok('Si')
         .cancel('No')
@@ -424,6 +429,7 @@
     $scope.newAgreement.type_name;
     $scope.newAgreement.agreement_type_id;
     $scope.newAgreement.agreement_status_id;
+    $scope.wizardIndice=null;
 
     $scope.toggleLeft = buildToggler('left');
 
@@ -441,7 +447,7 @@
     var page = 0;
     $scope.loadUniversities = function(){
       page += 1;
-      console.log(page);
+      //console.log(page);
       dataFactory.getUniversities(function(universities){
         $scope.universities = $scope.universities.concat(universities);
       },$scope.universitiesFilter, page);
@@ -460,7 +466,9 @@
     }
 
     $scope.addContryToAgreement=function(university){
-      if($scope.newAgreement.universities.indexOf(university)==-1){
+      // //console.log($scope.newAgreement.universities);
+      // //console.log(university);
+      if(findFirstOccurrence($scope.newAgreement.universities, 'id', university.id) < 0){//$scope.newAgreement.universities.indexOf(university)==-1
         $scope.newAgreement.universities.push(university);
         $scope.newAgreement.universitiesInsert.push(university);
       }
@@ -502,8 +510,12 @@
 
     var loadContacts=function(data){
       var aux=JSON.parse(data[0].f_responsablesbyorg);
+      // $scope.newAgreement.Contacts=[];
+
       for(var i in aux){
-        if(findFirstOccurrence($scope.newAgreement.Contacts, 'contact_id', aux[i].id) < 0){
+        //console.log(aux[i]);
+
+        if(findFirstOccurrence($scope.newAgreement.Contacts, 'contact_id', aux[i].id) < 0 && findFirstOccurrence($scope.newAgreement.Contacts, 'id', aux[i].id) < 0){
           $scope.newAgreement.Contacts.push(aux[i]);
         }
         //$scope.newAgreement.Contacts=JSON.parse(data[0].f_responsablesbyorg);
@@ -553,8 +565,8 @@
     }
 
     var getSelectedOrgs = function(agreement){
-      console.log("agreement");
-      console.log(agreement);
+      //console.log("agreement");
+      //console.log(agreement);
       $scope.newAgreement.title=agreement.title;
       $scope.newAgreement.from_date=$filter('date')(agreement.from_date, "dd/MM/yyyy");
       $scope.newAgreement.to_date=$filter('date')(agreement.to_date, "dd/MM/yyyy");
@@ -603,7 +615,7 @@
             $scope.newAgreement.selectedOrgs2Lvl.push(agreement.agreementItem[ai].agreementItemOu[aio]);
           $scope.newAgreement.plazasIn[agreement.agreementItem[ai].org_id][agreement.agreementItem[ai].agreementItemOu[aio].org_id]=agreement.agreementItem[ai].agreementItemOu[aio].in_units;
           $scope.newAgreement.plazasOut[agreement.agreementItem[ai].org_id][agreement.agreementItem[ai].agreementItemOu[aio].org_id]=agreement.agreementItem[ai].agreementItemOu[aio].out_units;
-          console.log($scope.newAgreement.plazasIn);
+          //console.log($scope.newAgreement.plazasIn);
         }
         $scope.newAgreement.plazasIn[agreement.agreementItem[ai].org_id]['UNC']=agreement.agreementItem[ai].in_units;
         $scope.newAgreement.plazasOut[agreement.agreementItem[ai].org_id]['UNC']=agreement.agreementItem[ai].out_units;
@@ -659,14 +671,14 @@
     if($scope.newAgreement.title=="" || $scope.newAgreement.from=="" || $scope.newAgreement.to=="" || $scope.newAgreement.type=="" || $scope.newAgreement.status==""){
       // alert("Faltan datos por completar");
       var toast = $mdToast.simple()
-        .content('Faltan datos por completar')
+        .content('Faltan datos por completar en el paso 1')
         .position('bottom left')
         .hideDelay(4000);
       $mdToast.show(toast);
     }else if(agreement.from_date>agreement.to_date){
       // dataFactory.updateAgreement(agr);
       var toast = $mdToast.simple()
-        .content('Fechas Invalidas')
+        .content('Fechas inválidas')
         .position('bottom left')
         .hideDelay(4000);
       $mdToast.show(toast);
@@ -696,11 +708,13 @@
       $mdDialog.hide([id]);
     }
 
-    $scope.searchUniversityCountry=function(code){
+    $scope.searchUniversityCountry=function(code, name, flag){
       page = 0;
       $('#universitiesContainer').scrollTop(0);
       $scope.universities=[];
       $scope.universitiesFilter.countryCode=code;
+      $scope.universitiesFilter.name=name;
+      $scope.universitiesFilter.flag=flag;
       dataFactory.getUniversities(getUniversities,$scope.universitiesFilter);
     }
 
@@ -713,7 +727,7 @@
           
         })
         .error(function (error){
-          console.log("Unable to load continents data." + error.message);
+          //console.log("Unable to load continents data." + error.message);
         });
     }
 
@@ -726,7 +740,7 @@
           $scope.continents.forEach(getCountriesFromContinent);
         })
         .error(function (error){
-          console.log("Unable to load continents data." + error.message);
+          //console.log("Unable to load continents data." + error.message);
         });
     }
 
@@ -735,7 +749,7 @@
       return $('.minimized li a').on('click', function() {
         var children, obj, toggle;
         obj = $(this);
-        console.log($(this));
+        //console.log($(this));
         if (obj.attr('href') === '#') {
           children = obj.parent().children('ul');
           toggle = obj.find('.toggle');
@@ -780,7 +794,7 @@ function buildToggler(navID) {
         $mdSidenav(navID)
           .toggle()
           .then(function() {
-            $log.debug("toggle " + navID + " is done");
+            // $log.debug("toggle " + navID + " is done");
           });
       }, 10);
 
